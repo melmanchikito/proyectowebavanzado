@@ -215,3 +215,50 @@
     grid-template-columns: 1fr;
   }
 }
+/* ===== JUEGO ACTIVO ===== */
+.juego-activo {
+  padding: 1rem 0;
+}
+
+.btn-volver {
+  background: none;
+  border: 2px solid #6c63ff;
+  color: #6c63ff;
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  margin-bottom: 2rem;
+  display: inline-block;
+}
+
+.btn-volver:hover {
+  background: #6c63ff;
+  color: #fff;
+}
+
+.juego-placeholder {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #6c63ff22, #00c2ff22);
+  border-radius: 20px;
+  border: 2px dashed #6c63ff55;
+}
+
+.juego-emoji {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.juego-placeholder h2 {
+  color: #6c63ff;
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.juego-placeholder p {
+  color: #9b97cc;
+}
