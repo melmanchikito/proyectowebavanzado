@@ -8,7 +8,7 @@
   </div>
 
   <nav class="nav">
-    @if (authService.estaLogueado) {
+    @if (authService.estaLogueado()) {
       <a routerLink="/home">Inicio</a>
       <a routerLink="/usuarios">Usuarios</a>
       <a routerLink="/aprendizaje">Aprendizaje</a>
