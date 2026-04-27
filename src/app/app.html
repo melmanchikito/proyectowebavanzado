@@ -1,4 +1,4 @@
-@if (authService.estaLogueado) {
+@if (authService.estaLogueado || mostrarHeader()) {
   <app-header></app-header>
 }
 
@@ -6,6 +6,6 @@
   <router-outlet></router-outlet>
 </main>
 
-@if (authService.estaLogueado) {
+@if (authService.estaLogueado || mostrarHeader()) {
   <app-footer></app-footer>
 }

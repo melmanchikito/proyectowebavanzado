@@ -1,12 +1,114 @@
 <section class="page">
-  <h1>Letras y Números</h1>
 
-  <div class="cards">
 
-    <div class="item">A B C</div>
-    <div class="item">1 2 3</div>
-    <div class="item">Colores</div>
-    <div class="item">Formas</div>
 
-  </div>
+  <header class="hdr">
+    <span class="hdr-ico">📚</span>
+    <div>
+      <h1>Letras y Números</h1>
+      <p>¡Aprende jugando!</p>
+    </div>
+    <span class="nivel">Nivel 1</span>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab" [class.on]="tabActiva === 'letras'"  (click)="cambiarTab('letras')">
+      <span>🔤</span>Letras
+    </button>
+    <button class="tab" [class.on]="tabActiva === 'numeros'" (click)="cambiarTab('numeros')">
+      <span>🔢</span>Números
+    </button>
+    <button class="tab" [class.on]="tabActiva === 'quiz'"    (click)="cambiarTab('quiz')">
+      <span>❓</span>Quiz
+    </button>
+  </nav>
+
+  <main class="cuerpo">
+
+    <!-- LETRAS -->
+    <section *ngIf="tabActiva === 'letras'">
+      <div class="seccion-top">
+        <span class="titulo">Toca una letra</span>
+        <span class="badge badge-p">A – Z</span>
+      </div>
+      <div class="grid-letras">
+        <div
+          *ngFor="let item of letras"
+          class="lcard"
+          [class.sel]="letraSeleccionada?.letra === item.letra"
+          (click)="seleccionarLetra(item)">
+          <div class="lb">{{ item.letra }}</div>
+          <div class="ls">{{ item.letra.toLowerCase() }}</div>
+        </div>
+      </div>
+      <div class="detalle" *ngIf="letraSeleccionada">
+        <div class="det-big">{{ letraSeleccionada.letra }}</div>
+        <div class="det-sub">Ejemplo: {{ letraSeleccionada.palabra }}</div>
+        <span class="badge badge-g">{{ letraSeleccionada.emoji }} {{ letraSeleccionada.palabra }}</span>
+      </div>
+    </section>
+
+    <!-- NÚMEROS -->
+    <section *ngIf="tabActiva === 'numeros'">
+      <div class="seccion-top">
+        <span class="titulo">Toca un número</span>
+        <span class="badge badge-t">0 – 9</span>
+      </div>
+      <div class="grid-nums">
+        <div
+          *ngFor="let n of numeros"
+          class="ncard"
+          [class.sel-n]="numeroSeleccionado === n"
+          (click)="seleccionarNumero(n)">
+          <div class="nb">{{ n }}</div>
+        </div>
+      </div>
+      <div class="detalle" *ngIf="numeroSeleccionado !== null">
+        <div class="det-big" style="color: #0F6E56;">{{ numeroSeleccionado }}</div>
+        <div class="det-sub">El número {{ numeroSeleccionado }}</div>
+        <div class="estrellas">
+          <span *ngFor="let s of estrellas(numeroSeleccionado)" class="estrella">⭐</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section *ngIf="tabActiva === 'quiz'">
+
+      <ng-container *ngIf="!quizFin">
+        <div class="seccion-top">
+          <span class="titulo">Selección múltiple</span>
+          <span class="badge badge-p">{{ quizAciertos }} / {{ preguntas.length }}</span>
+        </div>
+        <div class="qcard">
+          <div class="qtxt">{{ preguntaActual.enunciado }}</div>
+          <div class="qico">{{ preguntaActual.icono }}</div>
+          <div class="opts">
+            <div
+              *ngFor="let op of preguntaActual.opciones; let i = index"
+              class="opt"
+              [class.ok]="estadoOpcion(i) === 'ok'"
+              [class.no]="estadoOpcion(i) === 'no'"
+              (click)="elegir(i)">
+              {{ op }}
+            </div>
+          </div>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-bar" [style.width.%]="progreso"></div>
+        </div>
+        <p class="prog-lbl">Pregunta {{ quizIdx + 1 }} de {{ preguntas.length }}</p>
+      </ng-container>
+
+      <div class="final" *ngIf="quizFin">
+        <div class="final-ico">🏆</div>
+        <h2>¡Lo lograste!</h2>
+        <p>Acertaste {{ quizAciertos }} de {{ preguntas.length }} preguntas</p>
+        <button class="btn-r" (click)="reiniciarQuiz()">Jugar de nuevo</button>
+      </div>
+
+    </section>
+
+  </main>
+
 </section>

@@ -9,10 +9,10 @@ import { Component } from '@angular/core';
 export class AdminComponent {
 
   actividades = [
-    { nombre: 'Reconocer vocales', tipo: 'Letras', estado: 'Activo' },
-    { nombre: 'Contar números del 1 al 10', tipo: 'Números', estado: 'Activo' },
-    { nombre: 'Identificar colores', tipo: 'Colores', estado: 'Pendiente' },
-    { nombre: 'Juego de memoria', tipo: 'Juego', estado: 'Activo' }
+    { nombre: 'Reconocer vocales', tipo: 'Letras', estado: 'Activo', fecha: '2026-04-26' },
+    { nombre: 'Contar del 1 al 10', tipo: 'Números', estado: 'Activo', fecha: '2026-04-26' },
+    { nombre: 'Identificar colores', tipo: 'Colores', estado: 'Pendiente', fecha: '2026-04-26' },
+    { nombre: 'Juego de memoria', tipo: 'Juego', estado: 'Activo', fecha: '2026-04-26' }
   ];
 
 }
