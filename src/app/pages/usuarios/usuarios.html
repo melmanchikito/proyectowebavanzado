@@ -1,14 +1,101 @@
-<section class="page">
-  <h1>Gestión de Usuarios</h1>
+<section class="usuarios-page">
 
-  <div class="box">
-    <p>Registro de padres y docentes.</p>
-
-    <ul>
-      <li>Crear usuario</li>
-      <li>Editar usuario</li>
-      <li>Eliminar usuario</li>
-      <li>Control de acceso</li>
-    </ul>
+  <!-- HERO SECTION -->
+  <div class="usuarios-hero">
+    <div>
+      <span class="tag">Gestión de Acceso</span>
+      <h1>Administración de Usuarios</h1>
+      <p>
+        Registra y gestiona a padres, docentes para acceso seguro a la plataforma
+        educativa. Controla roles, permisos y estado de cada usuario.
+      </p>
+    </div>
+    <div class="hero-icon">👥</div>
   </div>
+
+  <!-- STATS SECTION -->
+  <div class="stats">
+    <div class="stat-card">
+      <span>👨‍👩‍👧</span>
+      <h3>28</h3>
+      <p>Usuarios totales</p>
+    </div>
+    <div class="stat-card">
+      <span>👨‍👩</span>
+      <h3>18</h3>
+      <p>Padres registrados</p>
+    </div>
+    <div class="stat-card">
+      <span>👨‍🏫</span>
+      <h3>8</h3>
+      <p>Docentes registrados</p>
+    </div>
+    <div class="stat-card">
+      <span>⏳</span>
+      <h3>2</h3>
+      <p>Registros pendientes</p>
+    </div>
+  </div>
+
+  <!-- TABLA DE USUARIOS -->
+  <div class="usuarios-container">
+    <div class="usuarios-header">
+      <h2>Listado de Usuarios</h2>
+      <button class="btn-crear">➕ Crear Usuario</button>
+    </div>
+
+    <div class="usuarios-filters">
+      <input type="text" placeholder="🔍 Buscar usuario..." class="search-input">
+      <select class="filter-select">
+        <option value="todos">Todos los roles</option>
+        <option value="padre">Padre</option>
+        <option value="docente">Docente</option>
+      </select>
+    </div>
+
+    <div class="table-responsive">
+      <table class="usuarios-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (usuario of usuarios; track usuario.id) {
+          <tr>
+            <td>
+              <div class="user-cell">
+                <span class="avatar-mini">{{ usuario.avatar }}</span>
+                <strong>{{ usuario.nombre }}</strong>
+              </div>
+            </td>
+            <td>{{ usuario.correo }}</td>
+            <td>
+              <span class="badge" [class]="'badge--' + usuario.rol">
+                {{ usuario.rol }}
+              </span>
+            </td>
+            <td>
+              <span class="status" [class]="'status--' + usuario.estado">
+                {{ usuario.estado }}
+              </span>
+            </td>
+            <td>
+              <div class="actions">
+                <button class="btn-action btn-edit" title="Editar">✏️</button>
+                <button class="btn-action btn-view" title="Ver">👁️</button>
+                <button class="btn-action btn-delete" title="Eliminar">🗑️</button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </section>
