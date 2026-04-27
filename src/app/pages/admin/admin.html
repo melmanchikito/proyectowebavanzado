@@ -1,0 +1,142 @@
+<section class="admin-page">
+
+  <div class="admin-hero">
+    <div>
+      <span class="tag">Panel Administrativo</span>
+      <h1>Gestión de la Plataforma Educativa</h1>
+      <p>
+        Desde este módulo se administrarán usuarios, actividades educativas,
+        juegos, reportes y configuraciones generales del sistema.
+      </p>
+    </div>
+
+    <div class="hero-icon">
+      ⚙️
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <span>👨‍👩‍👧</span>
+      <h3>25</h3>
+      <p>Usuarios registrados</p>
+    </div>
+
+    <div class="stat-card">
+      <span>📚</span>
+      <h3>12</h3>
+      <p>Actividades creadas</p>
+    </div>
+
+    <div class="stat-card">
+      <span>🎮</span>
+      <h3>6</h3>
+      <p>Juegos educativos</p>
+    </div>
+
+    <div class="stat-card">
+      <span>📈</span>
+      <h3>80%</h3>
+      <p>Progreso promedio</p>
+    </div>
+  </div>
+
+  <div class="admin-grid">
+
+    <div class="panel">
+      <h2>Opciones de Administración</h2>
+
+      <div class="options">
+        <div class="option">
+          <div class="option-icon">➕</div>
+          <div>
+            <h4>Agregar actividad</h4>
+            <p>Crear nuevos ejercicios para letras, números o colores.</p>
+          </div>
+        </div>
+
+        <div class="option">
+          <div class="option-icon">✏️</div>
+          <div>
+            <h4>Editar contenido</h4>
+            <p>Modificar información de actividades existentes.</p>
+          </div>
+        </div>
+
+        <div class="option">
+          <div class="option-icon">👥</div>
+          <div>
+            <h4>Gestionar usuarios</h4>
+            <p>Administrar padres, docentes y niños registrados.</p>
+          </div>
+        </div>
+
+        <div class="option">
+          <div class="option-icon">📊</div>
+          <div>
+            <h4>Ver reportes</h4>
+            <p>Consultar resultados generales de aprendizaje.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Crear nueva actividad</h2>
+
+      <form class="form">
+        <label>Nombre de la actividad</label>
+        <input type="text" placeholder="Ej: Aprender vocales">
+
+        <label>Tipo de actividad</label>
+        <select>
+          <option>Letras</option>
+          <option>Números</option>
+          <option>Colores</option>
+          <option>Formas</option>
+          <option>Juego educativo</option>
+        </select>
+
+        <label>Descripción</label>
+        <textarea placeholder="Ingrese una breve descripción"></textarea>
+
+        <button type="button">Guardar actividad</button>
+      </form>
+    </div>
+
+  </div>
+
+  <div class="panel table-panel">
+    <div class="table-header">
+      <h2>Actividades registradas</h2>
+      <button>Nuevo</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Actividad</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (actividad of actividades; track actividad.nombre) {
+          <tr>
+            <td>{{ actividad.nombre }}</td>
+            <td>{{ actividad.tipo }}</td>
+            <td>
+              <span class="status">{{ actividad.estado }}</span>
+            </td>
+            <td>
+              <button class="small-btn">Editar</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</section>

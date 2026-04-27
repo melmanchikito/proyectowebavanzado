@@ -1,0 +1,24 @@
+.page{
+padding:40px;
+}
+
+h1{
+color:#6c63ff;
+margin-bottom:25px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:20px;
+}
+
+.item{
+background:#fff;
+padding:40px;
+text-align:center;
+border-radius:20px;
+font-size:28px;
+font-weight:800;
+box-shadow:0 10px 20px rgba(0,0,0,.08);
+}

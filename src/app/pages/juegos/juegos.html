@@ -1,0 +1,58 @@
+<section class="page">
+ 
+  <div class="page-header">
+    <h1>Juegos Educativos</h1>
+    <p class="subtitulo">Aprende jugando con actividades diseñadas para ti</p>
+  </div>
+ 
+  <div class="filtros">
+    <button
+      class="filtro-btn"
+      [class.activo]="filtroActivo === 'todos'"
+      (click)="setFiltro('todos')">
+      Todos
+    </button>
+    <button
+      class="filtro-btn"
+      [class.activo]="filtroActivo === 'fácil'"
+      (click)="setFiltro('fácil')">
+      Fácil
+    </button>
+    <button
+      class="filtro-btn"
+      [class.activo]="filtroActivo === 'medio'"
+      (click)="setFiltro('medio')">
+      Medio
+    </button>
+  </div>
+ 
+  <div class="cards">
+    <div
+      class="game"
+      *ngFor="let juego of juegosFiltrados; trackBy: trackById"
+      [class]="'game game--' + juego.color">
+ 
+      <div class="game__icono">{{ juego.icono }}</div>
+ 
+      <div class="game__contenido">
+        <h2 class="game__titulo">{{ juego.titulo }}</h2>
+        <p class="game__descripcion">{{ juego.descripcion }}</p>
+ 
+        <div class="game__meta">
+          <span class="badge badge--nivel">{{ juego.nivel }}</span>
+          <span class="badge badge--jugadores">{{ juego.jugadores }}</span>
+        </div>
+      </div>
+ 
+      <a [routerLink]="juego.ruta" class="game__btn">
+        Jugar ahora
+      </a>
+ 
+    </div>
+  </div>
+ 
+  <div class="empty" *ngIf="juegosFiltrados.length === 0">
+    <p>No hay juegos disponibles para este filtro.</p>
+  </div>
+ 
+</section>

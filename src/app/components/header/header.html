@@ -1,0 +1,29 @@
+<header class="header">
+  <div class="brand" routerLink="/home">
+    <div class="brand-icon">📘</div>
+    <div>
+      <h2>Aprende Jugando</h2>
+      <span>Plataforma Educativa Inicial</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    @if (authService.estaLogueado) {
+      <a routerLink="/home">Inicio</a>
+      <a routerLink="/usuarios">Usuarios</a>
+      <a routerLink="/aprendizaje">Aprendizaje</a>
+      <a routerLink="/juegos">Juegos</a>
+      <a routerLink="/progreso">Progreso</a>
+      <a routerLink="/admin">Admin</a>
+
+      <div class="profile">
+        <span class="avatar">👤</span>
+        <span>{{ authService.usuarioLogueado }}</span>
+      </div>
+
+      <button (click)="cerrarSesion()">Cerrar sesión</button>
+    } @else {
+      <a routerLink="/">Iniciar sesión</a>
+    }
+  </nav>
+</header>

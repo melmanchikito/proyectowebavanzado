@@ -1,0 +1,17 @@
+.page{
+padding:40px;
+background:#f8fafc;
+min-height:100vh;
+}
+
+h1{
+color:#6c63ff;
+margin-bottom:20px;
+}
+
+.box{
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+}

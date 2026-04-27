@@ -1,0 +1,49 @@
+<section class="login-page">
+  <div class="decor decor-1">ABC</div>
+  <div class="decor decor-2">123</div>
+  <div class="decor decor-3">★</div>
+
+  <div class="login-card">
+    <div class="avatar">📚</div>
+
+    <h1>Bienvenido</h1>
+    <p>Accede a la plataforma educativa interactiva</p>
+
+    <form (ngSubmit)="ingresar()">
+      <div class="form-group">
+        <label>Usuario</label>
+        <input
+          type="text"
+          name="usuario"
+          [(ngModel)]="usuario"
+          placeholder="Ingrese su usuario"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Clave</label>
+        <input
+          type="password"
+          name="clave"
+          [(ngModel)]="clave"
+          placeholder="Ingrese su clave"
+          required
+        />
+      </div>
+
+      <button type="submit">Ingresar</button>
+    </form>
+
+    @if (mensaje) {
+      <div class="mensaje" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
+        {{ mensaje }}
+      </div>
+    }
+
+    <div class="credenciales">
+      <strong>Usuario:</strong> admin |
+      <strong>Clave:</strong> 12345
+    </div>
+  </div>
+</section>
