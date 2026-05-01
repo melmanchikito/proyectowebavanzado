@@ -1,0 +1,56 @@
+<div class="dialog-backdrop">
+
+  <div class="dialog-box">
+
+    <div class="dialog-header">
+      <h2>✏️ Editar Actividad</h2>
+      <button class="close-btn" (click)="cerrarDialog()">✖</button>
+    </div>
+
+    <div class="dialog-body">
+
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" [(ngModel)]="actividad.nombre" type="text">
+      </div>
+
+      <div class="form-group">
+        <label for="tipo">Tipo</label>
+        <select id="tipo" [(ngModel)]="actividad.tipo">
+          <option>Letras</option>
+          <option>Números</option>
+          <option>Colores</option>
+          <option>Juego educativo</option>
+          <option>Lectura</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="responsable">Responsable</label>
+        <input id="responsable" [(ngModel)]="actividad.responsable" type="text">
+      </div>
+
+      <div class="form-group">
+        <label for="estado">Estado</label>
+        <select id="estado" [(ngModel)]="actividad.estado">
+          <option>Activo</option>
+          <option>Pendiente</option>
+          <option>Inactivo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" [(ngModel)]="actividad.fecha" type="date">
+      </div>
+
+    </div>
+
+    <div class="dialog-footer">
+      <button class="btn-cancel" (click)="cerrarDialog()">Cancelar</button>
+      <button class="btn-save" (click)="guardarCambios()">Guardar</button>
+    </div>
+
+  </div>
+
+</div>

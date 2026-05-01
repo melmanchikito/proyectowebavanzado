@@ -4,6 +4,7 @@
 
     <div class="row g-4">
 
+      <!-- SIDEBAR -->
       <aside class="col-lg-3">
         <div class="sidebar card border-0 shadow-sm">
           <div class="card-body">
@@ -31,8 +32,10 @@
         </div>
       </aside>
 
+      <!-- MAIN -->
       <main class="col-lg-9">
 
+        <!-- HERO -->
         <div class="hero-admin card border-0 shadow-sm mb-4">
           <div class="card-body p-4 d-flex justify-content-between align-items-center">
             <div>
@@ -55,6 +58,7 @@
           </div>
         </div>
 
+        <!-- STATS -->
         <div class="row g-3 mb-4">
 
           <div class="col-md-3">
@@ -99,8 +103,10 @@
 
         </div>
 
+        <!-- FORM + OPTIONS -->
         <div class="row g-4 mb-4">
 
+          <!-- FORM -->
           <div class="col-lg-5">
             <div class="card border-0 shadow-sm h-100">
               <div class="card-body p-4">
@@ -108,13 +114,13 @@
 
                 <form>
                   <div class="mb-3">
-                    <label class="form-label fw-semibold">Nombre</label>
-                    <input type="text" class="form-control" placeholder="Ej: Aprender vocales">
+                    <label for="nombreActividad" class="form-label fw-semibold">Nombre</label>
+                    <input id="nombreActividad" type="text" class="form-control" placeholder="Ej: Aprender vocales">
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label fw-semibold">Tipo</label>
-                    <select class="form-select">
+                    <label for="tipoActividad" class="form-label fw-semibold">Tipo</label>
+                    <select id="tipoActividad" class="form-select">
                       <option>Letras</option>
                       <option>Números</option>
                       <option>Colores</option>
@@ -124,8 +130,8 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label fw-semibold">Descripción</label>
-                    <textarea class="form-control" rows="4" placeholder="Descripción de la actividad"></textarea>
+                    <label for="descripcionActividad" class="form-label fw-semibold">Descripción</label>
+                    <textarea id="descripcionActividad" class="form-control" rows="4" placeholder="Descripción de la actividad"></textarea>
                   </div>
 
                   <button type="button" class="btn btn-primary w-100 fw-bold">
@@ -136,12 +142,14 @@
             </div>
           </div>
 
+          <!-- OPCIONES -->
           <div class="col-lg-7">
             <div class="card border-0 shadow-sm h-100">
               <div class="card-body p-4">
                 <h4 class="fw-bold text-primary mb-3">Opciones rápidas</h4>
 
                 <div class="row g-3">
+
                   <div class="col-md-6">
                     <div class="quick-option">
                       <span>➕</span>
@@ -181,6 +189,7 @@
                       </div>
                     </div>
                   </div>
+
                 </div>
 
               </div>
@@ -189,6 +198,7 @@
 
         </div>
 
+        <!-- TABLA -->
         <div class="card border-0 shadow-sm">
           <div class="card-body p-4">
 
@@ -202,45 +212,75 @@
               </button>
             </div>
 
+            <!-- FILTRO -->
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar..."
+                [(ngModel)]="filtro">
+            </div>
+
+            <!-- TABLA -->
             <div class="table-responsive">
               <table class="table table-hover align-middle">
+
                 <thead class="table-light">
                   <tr>
                     <th>Actividad</th>
                     <th>Tipo</th>
+                    <th>Responsable</th>
                     <th>Estado</th>
                     <th>Fecha</th>
-                    <th>Acción</th>
+                    <th>Nivel</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  @for (actividad of actividades; track actividad.nombre) {
+                  @for (actividad of actividadesFiltradas; track actividad.nombre) {
                     <tr>
                       <td class="fw-semibold">{{ actividad.nombre }}</td>
                       <td>{{ actividad.tipo }}</td>
+                      <td>{{ actividad.responsable }}</td>
                       <td>
                         <span class="badge bg-success">
                           {{ actividad.estado }}
                         </span>
                       </td>
                       <td>{{ actividad.fecha }}</td>
+                      <td>{{ actividad.nivel }}</td>
                       <td>
-                        <button class="btn btn-sm btn-outline-primary me-2">
-                          Editar
+                        <button
+                          class="btn btn-sm btn-outline-primary me-2"
+                          (click)="modificarActividad(actividad)">
+                          Modificar
                         </button>
-                        <button class="btn btn-sm btn-outline-danger">
+
+                        <button
+                          class="btn btn-sm btn-outline-danger"
+                          (click)="eliminarActividad(actividad)">
                           Eliminar
                         </button>
                       </td>
                     </tr>
                   }
                 </tbody>
+
               </table>
             </div>
 
           </div>
         </div>
+
+        <!-- DIALOG -->
+        @if (mostrarDialog) {
+          <app-dialog-actividad
+            [actividad]="actividadSeleccionada"
+            (guardar)="guardarCambios($event)"
+            (cerrar)="cerrarDialog()">
+          </app-dialog-actividad>
+        }
 
       </main>
 
