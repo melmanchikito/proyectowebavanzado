@@ -41,16 +41,6 @@
   <div class="usuarios-container">
     <div class="usuarios-header">
       <h2>Listado de Usuarios</h2>
-      <button class="btn-crear">➕ Crear Usuario</button>
-    </div>
-
-    <div class="usuarios-filters">
-      <input type="text" placeholder="🔍 Buscar usuario..." class="search-input">
-      <select class="filter-select">
-        <option value="todos">Todos los roles</option>
-        <option value="padre">Padre</option>
-        <option value="docente">Docente</option>
-      </select>
     </div>
 
     <div class="table-responsive">
@@ -61,7 +51,6 @@
             <th>Correo</th>
             <th>Rol</th>
             <th>Estado</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -83,13 +72,6 @@
               <span class="status" [class]="'status--' + usuario.estado">
                 {{ usuario.estado }}
               </span>
-            </td>
-            <td>
-              <div class="actions">
-                <button class="btn-action btn-edit" title="Editar">✏️</button>
-                <button class="btn-action btn-view" title="Ver">👁️</button>
-                <button class="btn-action btn-delete" title="Eliminar">🗑️</button>
-              </div>
             </td>
           </tr>
           }

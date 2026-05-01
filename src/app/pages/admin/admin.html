@@ -12,13 +12,16 @@
             <p class="text-muted small mb-4">Gestión educativa</p>
 
             <div class="list-group list-group-flush">
-              <button class="list-group-item list-group-item-action active">
+              <button class="list-group-item list-group-item-action" [class.active]="seccionActiva === 'dashboard'"
+                (click)="seccionActiva = 'dashboard'">
                 Dashboard
               </button>
-              <button class="list-group-item list-group-item-action">
+              <button class="list-group-item list-group-item-action" [class.active]="seccionActiva === 'actividades'"
+                (click)="seccionActiva = 'actividades'">
                 Actividades
               </button>
-              <button class="list-group-item list-group-item-action">
+              <button class="list-group-item list-group-item-action" [class.active]="seccionActiva === 'usuarios'"
+                (click)="seccionActiva = 'usuarios'">
                 Usuarios
               </button>
               <button class="list-group-item list-group-item-action">
@@ -35,6 +38,9 @@
       <!-- MAIN -->
       <main class="col-lg-9">
 
+        <!-- SECCIÓN: ACTIVIDADES -->
+        @if (seccionActiva === 'actividades') {
+
         <!-- HERO -->
         <div class="hero-admin card border-0 shadow-sm mb-4">
           <div class="card-body p-4 d-flex justify-content-between align-items-center">
@@ -44,16 +50,16 @@
               </span>
 
               <h1 class="fw-bold mb-2">
-                Dashboard Administrativo
+                Gestión de Actividades
               </h1>
 
               <p class="mb-0">
-                Gestión de actividades, usuarios, juegos educativos y contenido de la plataforma.
+                Crea, edita y elimina actividades educativas para la plataforma.
               </p>
             </div>
 
             <div class="hero-icon d-none d-md-flex">
-              ⚙️
+              📚
             </div>
           </div>
         </div>
@@ -131,7 +137,8 @@
 
                   <div class="mb-3">
                     <label for="descripcionActividad" class="form-label fw-semibold">Descripción</label>
-                    <textarea id="descripcionActividad" class="form-control" rows="4" placeholder="Descripción de la actividad"></textarea>
+                    <textarea id="descripcionActividad" class="form-control" rows="4"
+                      placeholder="Descripción de la actividad"></textarea>
                   </div>
 
                   <button type="button" class="btn btn-primary w-100 fw-bold">
@@ -214,11 +221,7 @@
 
             <!-- FILTRO -->
             <div class="mb-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Buscar..."
-                [(ngModel)]="filtro">
+              <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="filtro">
             </div>
 
             <!-- TABLA -->
@@ -239,31 +242,27 @@
 
                 <tbody>
                   @for (actividad of actividadesFiltradas; track actividad.nombre) {
-                    <tr>
-                      <td class="fw-semibold">{{ actividad.nombre }}</td>
-                      <td>{{ actividad.tipo }}</td>
-                      <td>{{ actividad.responsable }}</td>
-                      <td>
-                        <span class="badge bg-success">
-                          {{ actividad.estado }}
-                        </span>
-                      </td>
-                      <td>{{ actividad.fecha }}</td>
-                      <td>{{ actividad.nivel }}</td>
-                      <td>
-                        <button
-                          class="btn btn-sm btn-outline-primary me-2"
-                          (click)="modificarActividad(actividad)">
-                          Modificar
-                        </button>
+                  <tr>
+                    <td class="fw-semibold">{{ actividad.nombre }}</td>
+                    <td>{{ actividad.tipo }}</td>
+                    <td>{{ actividad.responsable }}</td>
+                    <td>
+                      <span class="badge bg-success">
+                        {{ actividad.estado }}
+                      </span>
+                    </td>
+                    <td>{{ actividad.fecha }}</td>
+                    <td>{{ actividad.nivel }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary me-2" (click)="modificarActividad(actividad)">
+                        Modificar
+                      </button>
 
-                        <button
-                          class="btn btn-sm btn-outline-danger"
-                          (click)="eliminarActividad(actividad)">
-                          Eliminar
-                        </button>
-                      </td>
-                    </tr>
+                      <button class="btn btn-sm btn-outline-danger" (click)="eliminarActividad(actividad)">
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
                   }
                 </tbody>
 
@@ -275,11 +274,156 @@
 
         <!-- DIALOG -->
         @if (mostrarDialog) {
-          <app-dialog-actividad
-            [actividad]="actividadSeleccionada"
-            (guardar)="guardarCambios($event)"
-            (cerrar)="cerrarDialog()">
-          </app-dialog-actividad>
+        <app-dialog-actividad [actividad]="actividadSeleccionada" (guardar)="guardarCambios($event)"
+          (cerrar)="cerrarDialog()">
+        </app-dialog-actividad>
+        }
+
+        }
+
+        <!-- SECCIÓN: USUARIOS -->
+        @if (seccionActiva === 'usuarios') {
+
+        <!-- HERO -->
+        <div class="hero-admin card border-0 shadow-sm mb-4">
+          <div class="card-body p-4 d-flex justify-content-between align-items-center">
+            <div>
+              <span class="badge rounded-pill bg-warning text-dark mb-2">
+                Administración
+              </span>
+
+              <h1 class="fw-bold mb-2">
+                Gestión de Usuarios
+              </h1>
+
+              <p class="mb-0">
+                Administra padres, docentes y control de acceso a la plataforma.
+              </p>
+            </div>
+
+            <div class="hero-icon d-none d-md-flex">
+              👥
+            </div>
+          </div>
+        </div>
+
+        <!-- STATS USUARIOS -->
+        <div class="row g-3 mb-4">
+
+          <div class="col-md-3">
+            <div class="card stat-card border-0 shadow-sm">
+              <div class="card-body">
+                <span class="icon">👥</span>
+                <h3 class="fw-bold mt-2">{{ usuarios.length }}</h3>
+                <p class="text-muted mb-0">Total Usuarios</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card stat-card border-0 shadow-sm">
+              <div class="card-body">
+                <span class="icon">👨</span>
+                <h3 class="fw-bold mt-2">{{ usuarios.filter(u => u.rol === 'Padre').length }}</h3>
+                <p class="text-muted mb-0">Padres</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card stat-card border-0 shadow-sm">
+              <div class="card-body">
+                <span class="icon">👩‍🏫</span>
+                <h3 class="fw-bold mt-2">{{ usuarios.filter(u => u.rol === 'Docente').length }}</h3>
+                <p class="text-muted mb-0">Docentes</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card stat-card border-0 shadow-sm">
+              <div class="card-body">
+                <span class="icon">✅</span>
+                <h3 class="fw-bold mt-2">{{ usuarios.filter(u => u.estado === 'Activo').length }}</h3>
+                <p class="text-muted mb-0">Activos</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TABLA USUARIOS -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="fw-bold text-primary mb-0">
+                Usuarios registrados
+              </h4>
+
+              <button class="btn btn-warning fw-bold" (click)="crearNuevoUsuario()">
+                + Nuevo Usuario
+              </button>
+            </div>
+
+            <!-- FILTRO -->
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Buscar usuario..." [(ngModel)]="filtroUsuarios">
+            </div>
+
+            <!-- TABLA -->
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Fecha Registro</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @for (usuario of usuariosFiltrados; track usuario.email) {
+                  <tr>
+                    <td class="fw-semibold">{{ usuario.nombre }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td class="text-dark">{{ usuario.rol }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="getColorEstado(usuario.estado)">
+                        {{ usuario.estado }}
+                      </span>
+                    </td>
+                    <td>{{ usuario.fecha }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary me-2" (click)="modificarUsuario(usuario)">
+                        Editar
+                      </button>
+
+                      <button class="btn btn-sm btn-outline-danger" (click)="eliminarUsuario(usuario)">
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- DIALOG USUARIOS -->
+        @if (mostrarDialogUsuario) {
+        <app-dialog-usuario [usuario]="usuarioSeleccionado" [modo]="modoUsuario"
+          (guardar)="guardarCambiosUsuario($event)" (cerrar)="cerrarDialogUsuario()">
+        </app-dialog-usuario>
+        }
+
         }
 
       </main>

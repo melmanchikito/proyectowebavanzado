@@ -1,0 +1,54 @@
+<div class="dialog-backdrop">
+
+    <div class="dialog-box">
+
+        <div class="dialog-header">
+            <h2>{{ modo === 'crear' ? '➕ Nuevo Usuario' : '👤 Editar Usuario' }}</h2>
+            <button class="close-btn" (click)="cerrarDialog()">✖</button>
+        </div>
+
+        <div class="dialog-body">
+
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input id="nombre" [(ngModel)]="usuario.nombre" type="text">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" [(ngModel)]="usuario.email" type="email">
+            </div>
+
+            <div class="form-group">
+                <label for="rol">Rol</label>
+                <select id="rol" [(ngModel)]="usuario.rol">
+                    <option>Padre</option>
+                    <option>Docente</option>
+                    <option>Admin</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="estado">Estado</label>
+                <select id="estado" [(ngModel)]="usuario.estado">
+                    <option>Activo</option>
+                    <option>Inactivo</option>
+                    <option>Pendiente</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha">Fecha de Registro</label>
+                <input id="fecha" [(ngModel)]="usuario.fecha" type="date">
+            </div>
+
+        </div>
+
+        <div class="dialog-footer">
+            <button class="btn-cancel" (click)="cerrarDialog()">Cancelar</button>
+            <button class="btn-save" (click)="guardarCambios()">Guardar</button>
+        </div>
+
+    </div>
+
+</div>
