@@ -1,59 +1,164 @@
 <section class="page">
   <ng-container *ngIf="!juegoActivo">
-
     <div class="page-header">
       <h1>Juegos Educativos</h1>
       <p class="subtitulo">Aprende jugando con actividades diseñadas para ti</p>
     </div>
-
     <div class="filtros">
       <button class="filtro-btn" [class.activo]="filtroActivo === 'todos'" (click)="setFiltro('todos')">Todos</button>
       <button class="filtro-btn" [class.activo]="filtroActivo === 'fácil'" (click)="setFiltro('fácil')">Fácil</button>
       <button class="filtro-btn" [class.activo]="filtroActivo === 'medio'" (click)="setFiltro('medio')">Medio</button>
     </div>
-
     <div class="cards">
-      <div
-        class="game"
-        *ngFor="let juego of juegosFiltrados; trackBy: trackById"
-        [class]="'game game--' + juego.color">
-
+      <div class="game" *ngFor="let juego of juegosFiltrados; trackBy: trackById" [class]="'game game--' + juego.color">
         <div class="game__icono">{{ juego.icono }}</div>
-
         <div class="game__contenido">
           <h2 class="game__titulo">{{ juego.titulo }}</h2>
           <p class="game__descripcion">{{ juego.descripcion }}</p>
-
           <div class="game__meta">
             <span class="badge">{{ juego.nivel }}</span>
             <span class="badge">{{ juego.jugadores }}</span>
           </div>
         </div>
-
-        <button class="game__btn" (click)="abrirJuego(juego.id)">
-          Jugar ahora
-        </button>
-
+        <button class="game__btn" (click)="abrirJuego(juego.id)">Jugar ahora</button>
       </div>
     </div>
-
     <div class="empty" *ngIf="juegosFiltrados.length === 0">
       <p>No hay juegos disponibles para este filtro.</p>
     </div>
-
   </ng-container>
 
-  <!-- Vista del juego seleccionado -->
   <ng-container *ngIf="juegoActivo">
     <div class="juego-activo">
       <button class="btn-volver" (click)="cerrarJuego()">← Volver a Juegos</button>
 
-      <div class="juego-placeholder">
-        <p class="juego-emoji">🚧</p>
-        <h2>Juego en construcción</h2>
-        <p>Este juego estará disponible próximamente.</p>
+      <!-- ===== MEMORIA ===== -->
+      <div *ngIf="juegoActivo === 'memoria'" class="juego-contenedor">
+        <div class="juego-header">
+          <h2>🧠 Memoria</h2>
+          <div class="juego-stats">
+            <span class="stat">Parejas: <strong>{{ parejas }}/8</strong></span>
+            <span class="stat">Intentos: <strong>{{ intentos }}</strong></span>
+          </div>
+        </div>
+        <div class="grid-memoria" *ngIf="!memoriaCompleto">
+          <div class="carta" *ngFor="let carta of cartasMemoria"
+            [class.volteada]="carta.volteada || carta.emparejada"
+            [class.emparejada]="carta.emparejada"
+            (click)="voltearCarta(carta)">
+            <div class="carta-inner">
+              <div class="carta-frente">?</div>
+              <div class="carta-reverso">{{ carta.emoji }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="juego-ganado" *ngIf="memoriaCompleto">
+          <p class="ganado-emoji">🎉</p>
+          <h3>¡Felicitaciones!</h3>
+          <p>Completaste el juego en <strong>{{ intentos }} intentos</strong>.</p>
+          <button class="btn-reiniciar" (click)="iniciarMemoria()">Jugar de nuevo</button>
+        </div>
       </div>
+
+      <!-- ===== COLORES ===== -->
+      <div *ngIf="juegoActivo === 'colores'" class="juego-contenedor">
+        <div class="juego-header">
+          <h2>🎨 Colores</h2>
+          <div class="juego-stats">
+            <span class="stat">Pregunta: <strong>{{ colorEstado.index + 1 }}/{{ colorEstado.total }}</strong></span>
+            <span class="stat">Puntaje: <strong>{{ colorEstado.puntaje }}</strong></span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="!colorEstado.finalizado && colorEstado.pregunta">
+          <div class="color-muestra" [style.background]="colorEstado.pregunta.hex"></div>
+          <p class="color-pregunta">¿Cómo se llama este color?</p>
+          <div class="color-opciones">
+            <button
+              *ngFor="let op of colorEstado.pregunta.opciones"
+              class="color-btn"
+              [class.correcto]="colorEstado.respuesta !== null && op === colorEstado.pregunta.nombre"
+              [class.incorrecto]="colorEstado.respuesta === op && !colorEstado.correcto"
+              [disabled]="colorEstado.respuesta !== null"
+              (click)="responderColor(op)">
+              {{ op }}
+            </button>
+          </div>
+        </ng-container>
+
+        <div class="juego-ganado" *ngIf="colorEstado.finalizado">
+          <p class="ganado-emoji">🌈</p>
+          <h3>¡Terminaste!</h3>
+          <p>Tu puntaje: <strong>{{ colorEstado.puntaje }}/{{ colorEstado.total }}</strong></p>
+          <button class="btn-reiniciar" (click)="iniciarColores()">Jugar de nuevo</button>
+        </div>
+      </div>
+
+      <!-- ===== ROMPECABEZAS ===== -->
+      <div *ngIf="juegoActivo === 'rompecabezas'" class="juego-contenedor">
+        <div class="juego-header">
+          <h2>🧩 Rompecabezas</h2>
+          <div class="juego-stats">
+            <span class="stat">Movimientos: <strong>{{ movimientos }}</strong></span>
+          </div>
+        </div>
+        <div *ngIf="!puzzleCompleto">
+          <p class="puzzle-instruccion">Ordena los números del 1 al 15. Toca una pieza junto al espacio vacío para moverla.</p>
+          <div class="grid-puzzle">
+            <div *ngFor="let pieza of tablero; let i = index"
+              class="puzzle-pieza"
+              [class.vacia]="pieza === null"
+              [class.correcta]="esCorrecta(i)"
+              (click)="moverPieza(i)">
+              {{ pieza }}
+            </div>
+          </div>
+        </div>
+        <div class="juego-ganado" *ngIf="puzzleCompleto">
+          <p class="ganado-emoji">🏆</p>
+          <h3>¡Resuelto!</h3>
+          <p>Lo lograste en <strong>{{ movimientos }} movimientos</strong>.</p>
+          <button class="btn-reiniciar" (click)="iniciarRompecabezas()">Jugar de nuevo</button>
+        </div>
+      </div>
+
+      <!-- ===== ASOCIACION ===== -->
+      <div *ngIf="juegoActivo === 'asociacion'" class="juego-contenedor">
+        <div class="juego-header">
+          <h2>🔗 Asociación</h2>
+          <div class="juego-stats">
+            <span class="stat">Pares: <strong>{{ asociacionPuntaje }}/{{ paresAsociacion.length }}</strong></span>
+          </div>
+        </div>
+        <div *ngIf="!asociacionCompleto">
+          <p class="asociacion-instruccion">Selecciona un elemento de cada columna para asociarlos.</p>
+          <div class="asociacion-grid" [class.error]="asociacionError">
+            <div class="asociacion-col">
+              <div *ngFor="let item of columnaIzq" class="asociacion-item"
+                [class.seleccionado]="item.seleccionado"
+                [class.emparejado]="item.emparejado"
+                (click)="seleccionarIzq(item)">
+                {{ item.texto }}
+              </div>
+            </div>
+            <div class="asociacion-col">
+              <div *ngFor="let item of columnaDer" class="asociacion-item"
+                [class.seleccionado]="item.seleccionado"
+                [class.emparejado]="item.emparejado"
+                (click)="seleccionarDer(item)">
+                {{ item.texto }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="juego-ganado" *ngIf="asociacionCompleto">
+          <p class="ganado-emoji">🎊</p>
+          <h3>¡Excelente!</h3>
+          <p>Asociaste todos los pares correctamente.</p>
+          <button class="btn-reiniciar" (click)="iniciarAsociacion()">Jugar de nuevo</button>
+        </div>
+      </div>
+
     </div>
   </ng-container>
-
 </section>
