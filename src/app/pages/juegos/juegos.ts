@@ -50,7 +50,7 @@ export class JuegosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
   ngOnDestroy(): void { this.limpiarTimer(); }
 
-  // ===== MEMORIA =====
+  // MEMORIA
   cartasMemoria: CartaMemoria[] = [];
   cartasVolteadas: CartaMemoria[] = [];
   parejas = 0; intentos = 0;
@@ -86,7 +86,7 @@ export class JuegosComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ===== COLORES =====
+  // COLORES 
   colorPreguntas: ColorPregunta[] = [
     { nombre: 'Rojo',     hex: '#e74c3c', opciones: ['Azul','Rojo','Verde','Amarillo'] },
     { nombre: 'Azul',     hex: '#3498db', opciones: ['Morado','Azul','Naranja','Rosa'] },
@@ -98,7 +98,6 @@ export class JuegosComponent implements OnInit, OnDestroy {
     { nombre: 'Celeste',  hex: '#00bcd4', opciones: ['Verde','Azul','Celeste','Gris'] },
   ];
 
-  // Estado del juego colores — usamos un objeto para forzar cambio de referencia
   colorEstado = {
     index: 0,
     puntaje: 0,
@@ -150,7 +149,7 @@ export class JuegosComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  // ===== ROMPECABEZAS =====
+  // ROMPECABEZAS
   tablero: (number | null)[] = [];
   movimientos = 0; puzzleCompleto = false; tamano = 4;
 
@@ -191,7 +190,7 @@ export class JuegosComponent implements OnInit, OnDestroy {
     const v = this.tablero[i]; return v !== null && v === i + 1;
   }
 
-  // ===== ASOCIACION =====
+  // ASOCIACION 
   paresAsociacion = [
     { id: 1, izquierda: '🐶 Perro',     derecha: 'Ladra'  },
     { id: 2, izquierda: '🐱 Gato',      derecha: 'Maúlla' },
