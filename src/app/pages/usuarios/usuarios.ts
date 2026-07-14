@@ -1,13 +1,5 @@
-import { Component } from '@angular/core';
-
-interface Usuario {
-  id: number;
-  nombre: string;
-  correo: string;
-  rol: 'padre' | 'docente';
-  estado: 'activo' | 'pendiente' | 'inactivo';
-  avatar: string;
-}
+import { Component, OnInit } from '@angular/core';
+import { UsuarioApi, UsuarioApiService } from '../../services/usuario-api.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -15,71 +7,112 @@ interface Usuario {
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css'
 })
-export class UsuariosComponent {
-  usuarios: Usuario[] = [
-    {
-      id: 1,
-      nombre: 'Carlos García',
-      correo: 'carlos.garcia@mail.com',
-      rol: 'padre',
-      estado: 'activo',
-      avatar: '👨'
-    },
-    {
-      id: 2,
-      nombre: 'María López',
-      correo: 'maria.lopez@mail.com',
-      rol: 'docente',
-      estado: 'activo',
-      avatar: '👩'
-    },
-    {
-      id: 3,
-      nombre: 'Juan Martínez',
-      correo: 'juan.martinez@mail.com',
-      rol: 'padre',
-      estado: 'activo',
-      avatar: '👨'
-    },
-    {
-      id: 4,
-      nombre: 'Ana Rodríguez',
-      correo: 'ana.rodriguez@mail.com',
-      rol: 'docente',
-      estado: 'pendiente',
-      avatar: '👩'
-    },
-    {
-      id: 5,
-      nombre: 'Pedro Sánchez',
-      correo: 'pedro.sanchez@mail.com',
-      rol: 'padre',
-      estado: 'activo',
-      avatar: '👨'
-    },
-    {
-      id: 6,
-      nombre: 'Laura Fernández',
-      correo: 'laura.fernandez@mail.com',
-      rol: 'docente',
-      estado: 'activo',
-      avatar: '👩'
-    },
-    {
-      id: 7,
-      nombre: 'Roberto González',
-      correo: 'roberto.gonzalez@mail.com',
-      rol: 'padre',
-      estado: 'inactivo',
-      avatar: '👨'
-    },
-    {
-      id: 8,
-      nombre: 'Sofía Torres',
-      correo: 'sofia.torres@mail.com',
-      rol: 'docente',
-      estado: 'activo',
-      avatar: '👩'
+export class UsuariosComponent implements OnInit {
+
+  usuarios: UsuarioApi[] = [];
+  cargando = true;
+  mensaje = '';
+  tipoMensaje: 'success' | 'error' | '' = '';
+
+  constructor(private usuarioApiService: UsuarioApiService) { }
+
+  ngOnInit(): void {
+    void this.cargarUsuarios();
+  }
+
+  async cargarUsuarios(): Promise<void> {
+    this.cargando = true;
+    this.mensaje = '';
+
+    try {
+      this.usuarios = await this.usuarioApiService.getUsuarios();
+    } catch {
+      this.usuarios = [];
+      this.mensaje = 'No se pudieron cargar los usuarios desde la API.';
+      this.tipoMensaje = 'error';
+    } finally {
+      this.cargando = false;
     }
-  ];
+  }
+
+  get totalUsuarios(): number {
+    return this.usuarios.length;
+  }
+
+  get padresRegistrados(): number {
+    return this.usuarios.filter(usuario => this.normalizarRol(usuario.rolNombre) === 'padre').length;
+  }
+
+  get docentesRegistrados(): number {
+    return this.usuarios.filter(usuario => this.normalizarRol(usuario.rolNombre) === 'docente').length;
+  }
+
+  get usuariosActivos(): number {
+    return this.usuarios.filter(usuario => this.normalizarEstado(usuario.estado) === 'A').length;
+  }
+
+  getAvatar(usuario: UsuarioApi): string {
+    const rol = this.normalizarRol(usuario.rolNombre);
+
+    if (rol === 'padre') {
+      return '👨';
+    }
+
+    if (rol === 'docente') {
+      return '👩';
+    }
+
+    if (rol === 'admin') {
+      return '🛡️';
+    }
+
+    return usuario.nombre?.charAt(0).toUpperCase() || '👤';
+  }
+
+  getRolClass(rolNombre: string): string {
+    switch (this.normalizarRol(rolNombre)) {
+      case 'padre':
+        return 'badge badge--padre';
+      case 'docente':
+        return 'badge badge--docente';
+      case 'admin':
+        return 'badge badge--admin';
+      default:
+        return 'badge badge--generic';
+    }
+  }
+
+  getEstadoClass(estado: string): string {
+    switch (this.normalizarEstado(estado)) {
+      case 'A':
+        return 'status status--activo';
+      case 'I':
+        return 'status status--inactivo';
+      case 'N':
+        return 'status status--no-disponible';
+      default:
+        return 'status status--no-disponible';
+    }
+  }
+
+  getEstadoLabel(estado: string): string {
+    switch (this.normalizarEstado(estado)) {
+      case 'A':
+        return 'Activo';
+      case 'I':
+        return 'Inactivo';
+      case 'N':
+        return 'No disponible';
+      default:
+        return 'No disponible';
+    }
+  }
+
+  private normalizarRol(rolNombre: string): string {
+    return (rolNombre ?? '').trim().toLowerCase();
+  }
+
+  private normalizarEstado(estado: string): string {
+    return (estado ?? '').trim().toUpperCase();
+  }
 }

@@ -241,6 +241,16 @@
   color: #d97706;
 }
 
+.badge--admin {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
+
+.badge--generic {
+  background: #e5e7eb;
+  color: #374151;
+}
+
 /* STATUS */
 .status {
   display: inline-block;
@@ -263,6 +273,28 @@
 .status--inactivo {
   background: #fee2e2;
   color: #dc2626;
+}
+
+.status--no-disponible {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.mensaje {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-weight: 700;
+}
+
+.mensaje.success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.mensaje.error {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 /* ACCIONES */

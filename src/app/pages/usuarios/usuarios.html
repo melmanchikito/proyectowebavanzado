@@ -17,23 +17,23 @@
   <div class="stats">
     <div class="stat-card">
       <span>👨‍👩‍👧</span>
-      <h3>28</h3>
+      <h3>{{ totalUsuarios }}</h3>
       <p>Usuarios totales</p>
     </div>
     <div class="stat-card">
       <span>👨‍👩</span>
-      <h3>18</h3>
+      <h3>{{ padresRegistrados }}</h3>
       <p>Padres registrados</p>
     </div>
     <div class="stat-card">
       <span>👨‍🏫</span>
-      <h3>8</h3>
+      <h3>{{ docentesRegistrados }}</h3>
       <p>Docentes registrados</p>
     </div>
     <div class="stat-card">
       <span>⏳</span>
-      <h3>2</h3>
-      <p>Registros pendientes</p>
+      <h3>{{ usuariosActivos }}</h3>
+      <p>Usuarios activos</p>
     </div>
   </div>
 
@@ -54,30 +54,42 @@
           </tr>
         </thead>
         <tbody>
-          @for (usuario of usuarios; track usuario.id) {
+          @if (cargando) {
+          <tr>
+            <td colspan="4">Cargando usuarios...</td>
+          </tr>
+          } @else {
+          @for (usuario of usuarios; track usuario.usuarioId) {
           <tr>
             <td>
               <div class="user-cell">
-                <span class="avatar-mini">{{ usuario.avatar }}</span>
+                <span class="avatar-mini">{{ getAvatar(usuario) }}</span>
                 <strong>{{ usuario.nombre }}</strong>
               </div>
             </td>
-            <td>{{ usuario.correo }}</td>
+            <td>{{ usuario.email }}</td>
             <td>
-              <span class="badge" [class]="'badge--' + usuario.rol">
-                {{ usuario.rol }}
+              <span class="badge" [class]="getRolClass(usuario.rolNombre)">
+                {{ usuario.rolNombre }}
               </span>
             </td>
             <td>
-              <span class="status" [class]="'status--' + usuario.estado">
-                {{ usuario.estado }}
+              <span class="status" [class]="getEstadoClass(usuario.estado)">
+                {{ getEstadoLabel(usuario.estado) }}
               </span>
             </td>
           </tr>
+          }
           }
         </tbody>
       </table>
     </div>
   </div>
+
+  @if (mensaje) {
+  <div class="mensaje" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
+    {{ mensaje }}
+  </div>
+  }
 
 </section>
