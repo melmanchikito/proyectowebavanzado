@@ -18,7 +18,7 @@
         <label for="tipo">Tipo</label>
         <select id="tipo" [(ngModel)]="actividad.tipo">
           <option>Letras</option>
-          <option>Números</option>
+          <option>Numeros</option>
           <option>Colores</option>
           <option>Juego educativo</option>
           <option>Lectura</option>
@@ -27,15 +27,30 @@
 
       <div class="form-group">
         <label for="responsable">Responsable</label>
-        <input id="responsable" [(ngModel)]="actividad.responsable" type="text">
+        <select id="responsable" [(ngModel)]="actividad.responsableUsuarioId">
+          <option [ngValue]="null">Sin responsable</option>
+          @for (responsable of responsables; track responsable.usuarioId) {
+            <option [ngValue]="responsable.usuarioId">{{ responsable.nombre }}</option>
+          }
+        </select>
       </div>
 
       <div class="form-group">
         <label for="estado">Estado</label>
         <select id="estado" [(ngModel)]="actividad.estado">
-          <option>Activo</option>
-          <option>Pendiente</option>
-          <option>Inactivo</option>
+          <option value="A">Activo</option>
+          <option value="N">Pendiente</option>
+          <option value="I">Inactivo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="nivel">Nivel</label>
+        <select id="nivel" [(ngModel)]="actividad.nivel">
+          <option>Inicial</option>
+          <option>Basico</option>
+          <option>Intermedio</option>
+          <option>Avanzado</option>
         </select>
       </div>
 

@@ -17,22 +17,22 @@
   <div class="stats">
     <div class="stat-card">
       <span>👨‍👩‍👧</span>
-      <h3>28</h3>
+      <h3>{{ usuarios.length }}</h3>
       <p>Usuarios totales</p>
     </div>
     <div class="stat-card">
       <span>👨‍👩</span>
-      <h3>18</h3>
+      <h3>{{ totalPadres }}</h3>
       <p>Padres registrados</p>
     </div>
     <div class="stat-card">
       <span>👨‍🏫</span>
-      <h3>8</h3>
+      <h3>{{ totalDocentes }}</h3>
       <p>Docentes registrados</p>
     </div>
     <div class="stat-card">
       <span>⏳</span>
-      <h3>2</h3>
+      <h3>{{ totalPendientes }}</h3>
       <p>Registros pendientes</p>
     </div>
   </div>
@@ -42,6 +42,14 @@
     <div class="usuarios-header">
       <h2>Listado de Usuarios</h2>
     </div>
+
+    @if (cargando) {
+      <p>Cargando usuarios...</p>
+    }
+
+    @if (error) {
+      <p class="text-danger">{{ error }}</p>
+    }
 
     <div class="table-responsive">
       <table class="usuarios-table">
@@ -54,23 +62,23 @@
           </tr>
         </thead>
         <tbody>
-          @for (usuario of usuarios; track usuario.id) {
+          @for (usuario of usuarios; track usuario.usuarioId) {
           <tr>
             <td>
               <div class="user-cell">
-                <span class="avatar-mini">{{ usuario.avatar }}</span>
+                <span class="avatar-mini">{{ avatar(usuario.rolNombre) }}</span>
                 <strong>{{ usuario.nombre }}</strong>
               </div>
             </td>
-            <td>{{ usuario.correo }}</td>
+            <td>{{ usuario.email }}</td>
             <td>
-              <span class="badge" [class]="'badge--' + usuario.rol">
-                {{ usuario.rol }}
+              <span class="badge" [class]="'badge--' + rolTexto(usuario.rolNombre)">
+                {{ rolTexto(usuario.rolNombre) }}
               </span>
             </td>
             <td>
-              <span class="status" [class]="'status--' + usuario.estado">
-                {{ usuario.estado }}
+              <span class="status" [class]="'status--' + estadoTexto(usuario.estado)">
+                {{ estadoTexto(usuario.estado) }}
               </span>
             </td>
           </tr>
@@ -78,6 +86,10 @@
         </tbody>
       </table>
     </div>
+
+    @if (!cargando && usuarios.length === 0) {
+      <p>No hay usuarios registrados.</p>
+    }
   </div>
 
 </section>

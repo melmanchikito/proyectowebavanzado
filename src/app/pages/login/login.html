@@ -11,28 +11,28 @@
 
     <form (ngSubmit)="ingresar()">
       <div class="form-group">
-        <label>Usuario</label>
+        <label>Correo</label>
         <input
-          type="text"
+          type="email"
           name="usuario"
           [(ngModel)]="usuario"
-          placeholder="Ingrese su usuario"
+          placeholder="admin@proyecto.local"
           required
         />
       </div>
 
       <div class="form-group">
-        <label>Clave</label>
+        <label>Contraseña</label>
         <input
           type="password"
           name="clave"
           [(ngModel)]="clave"
-          placeholder="Ingrese su clave"
+          placeholder="Ingrese su contraseña"
           required
         />
       </div>
 
-      <button type="submit">Ingresar</button>
+      <button type="submit" [disabled]="cargando">{{ cargando ? 'Ingresando...' : 'Ingresar' }}</button>
     </form>
 
     @if (mensaje) {
@@ -42,7 +42,7 @@
     }
 
     <div class="credenciales">
-      <strong>Usuario:</strong> admin |
+      <strong>Correo:</strong> admin@proyecto.local |
       <strong>Clave:</strong> 12345
     </div>
   </div>

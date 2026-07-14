@@ -19,29 +19,37 @@
 
   </div>
 
+  @if (cargando) {
+    <p>Cargando progreso...</p>
+  }
+
+  @if (error) {
+    <p class="text-danger">{{ error }}</p>
+  }
+
   <div class="stats">
 
     <div class="card">
       <span>👦</span>
-      <h2>24</h2>
-      <p>Niños registrados</p>
+      <h2>{{ resumen?.usuariosRegistrados ?? 0 }}</h2>
+      <p>Usuarios registrados</p>
     </div>
 
     <div class="card">
       <span>📚</span>
-      <h2>16</h2>
+      <h2>{{ resumen?.actividadesRealizadas ?? 0 }}</h2>
       <p>Actividades realizadas</p>
     </div>
 
     <div class="card">
       <span>⭐</span>
-      <h2>82%</h2>
+      <h2>{{ resumen?.promedioGeneral ?? 0 }}%</h2>
       <p>Promedio general</p>
     </div>
 
     <div class="card">
       <span>🏆</span>
-      <h2>4</h2>
+      <h2>{{ resumen?.nivelesCompletados ?? 0 }}</h2>
       <p>Niveles completados</p>
     </div>
 
@@ -54,33 +62,18 @@
 
       <div class="bars">
 
-        <div class="bar-item">
-          <label>Letras</label>
-          <div class="bar">
-            <span style="width: 90%"></span>
+        @for (categoria of categorias; track categoria.categoria) {
+          <div class="bar-item">
+            <label>{{ categoria.categoria }}</label>
+            <div class="bar">
+              <span [style.width.%]="categoria.avance"></span>
+            </div>
           </div>
-        </div>
+        }
 
-        <div class="bar-item">
-          <label>Números</label>
-          <div class="bar">
-            <span style="width: 78%"></span>
-          </div>
-        </div>
-
-        <div class="bar-item">
-          <label>Colores</label>
-          <div class="bar">
-            <span style="width: 95%"></span>
-          </div>
-        </div>
-
-        <div class="bar-item">
-          <label>Juegos</label>
-          <div class="bar">
-            <span style="width: 70%"></span>
-          </div>
-        </div>
+        @if (!cargando && categorias.length === 0) {
+          <p>No hay progreso registrado.</p>
+        }
 
       </div>
     </div>
@@ -124,6 +117,12 @@
           </td>
         </tr>
 
+        }
+
+        @if (!cargando && estudiantes.length === 0) {
+        <tr>
+          <td colspan="3">No hay registros de progreso.</td>
+        </tr>
         }
 
       </tbody>

@@ -1,5 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActividadService } from '../../services/actividad.service';
 
 interface LetraItem { letra: string; palabra: string; emoji: string; }
 interface Pregunta { enunciado: string; icono: string; opciones: string[]; correcta: number; }
@@ -13,9 +14,16 @@ interface Pregunta { enunciado: string; icono: string; opciones: string[]; corre
 })
 export class AprendizajeComponent {
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private actividadService: ActividadService
+  ) {
+    this.cargarActividadActual();
+  }
 
   tabActiva: 'letras' | 'numeros' | 'quiz' = 'letras';
+  nivelActual = 'Inicial';
+  errorActividades = '';
 
   letras: LetraItem[] = [
     { letra: 'A', palabra: 'Árbol', emoji: '🌳' },
@@ -125,5 +133,15 @@ export class AprendizajeComponent {
 
   cambiarTab(tab: typeof this.tabActiva): void {
     this.tabActiva = tab;
+  }
+
+  private cargarActividadActual(): void {
+    this.actividadService.obtenerActividades().subscribe({
+      next: actividades => {
+        const actividad = actividades.find(item => item.estado === 'A' && ['Letras', 'Numeros', 'Colores'].includes(item.tipo));
+        this.nivelActual = actividad?.nivel ?? 'Inicial';
+      },
+      error: () => this.errorActividades = 'No se pudo consultar el nivel de aprendizaje.'
+    });
   }
 }

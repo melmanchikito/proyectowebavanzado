@@ -12,8 +12,8 @@
             <p class="text-muted small mb-4">Gestión educativa</p>
 
             <div class="list-group list-group-flush">
-              <button class="list-group-item list-group-item-action" [class.active]="seccionActiva === 'dashboard'"
-                (click)="seccionActiva = 'dashboard'">
+              <button class="list-group-item list-group-item-action" [class.active]="seccionActiva === 'actividades'"
+                (click)="seccionActiva = 'actividades'">
                 Dashboard
               </button>
               <button class="list-group-item list-group-item-action" [class.active]="seccionActiva === 'actividades'"
@@ -24,10 +24,10 @@
                 (click)="seccionActiva = 'usuarios'">
                 Usuarios
               </button>
-              <button class="list-group-item list-group-item-action">
+              <button class="list-group-item list-group-item-action" (click)="seccionActiva = 'actividades'">
                 Reportes
               </button>
-              <button class="list-group-item list-group-item-action">
+              <button class="list-group-item list-group-item-action" (click)="seccionActiva = 'usuarios'">
                 Configuración
               </button>
             </div>
@@ -37,6 +37,9 @@
 
       <!-- MAIN -->
       <main class="col-lg-9">
+        @if (error) {
+        <div class="alert alert-danger">{{ error }}</div>
+        }
 
         <!-- SECCIÓN: ACTIVIDADES -->
         @if (seccionActiva === 'actividades') {
@@ -71,7 +74,7 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">👥</span>
-                <h3 class="fw-bold mt-2">25</h3>
+                <h3 class="fw-bold mt-2">{{ usuarios.length }}</h3>
                 <p class="text-muted mb-0">Usuarios</p>
               </div>
             </div>
@@ -81,7 +84,7 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">📚</span>
-                <h3 class="fw-bold mt-2">12</h3>
+                <h3 class="fw-bold mt-2">{{ actividades.length }}</h3>
                 <p class="text-muted mb-0">Actividades</p>
               </div>
             </div>
@@ -91,7 +94,7 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">🎮</span>
-                <h3 class="fw-bold mt-2">6</h3>
+                <h3 class="fw-bold mt-2">{{ totalJuegos }}</h3>
                 <p class="text-muted mb-0">Juegos</p>
               </div>
             </div>
@@ -101,8 +104,8 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">📈</span>
-                <h3 class="fw-bold mt-2">80%</h3>
-                <p class="text-muted mb-0">Progreso</p>
+                <h3 class="fw-bold mt-2">{{ totalActivos }}</h3>
+                <p class="text-muted mb-0">Usuarios activos</p>
               </div>
             </div>
           </div>
@@ -141,7 +144,7 @@
                       placeholder="Descripción de la actividad"></textarea>
                   </div>
 
-                  <button type="button" class="btn btn-primary w-100 fw-bold">
+                  <button type="button" class="btn btn-primary w-100 fw-bold" (click)="crearNuevaActividad()">
                     Guardar actividad
                   </button>
                 </form>
@@ -214,7 +217,7 @@
                 Actividades registradas
               </h4>
 
-              <button class="btn btn-warning fw-bold">
+              <button class="btn btn-warning fw-bold" (click)="crearNuevaActividad()">
                 + Nuevo
               </button>
             </div>
@@ -241,17 +244,17 @@
                 </thead>
 
                 <tbody>
-                  @for (actividad of actividadesFiltradas; track actividad.nombre) {
+                  @for (actividad of actividadesFiltradas; track actividad.actividadId) {
                   <tr>
                     <td class="fw-semibold">{{ actividad.nombre }}</td>
                     <td>{{ actividad.tipo }}</td>
-                    <td>{{ actividad.responsable }}</td>
+                    <td>{{ actividad.responsableNombre || 'Sin responsable' }}</td>
                     <td>
-                      <span class="badge bg-success">
-                        {{ actividad.estado }}
+                      <span class="badge" [ngClass]="getColorEstado(actividad.estado)">
+                        {{ estadoTexto(actividad.estado) }}
                       </span>
                     </td>
-                    <td>{{ actividad.fecha }}</td>
+                    <td>{{ actividad.fecha | date:'yyyy-MM-dd' }}</td>
                     <td>{{ actividad.nivel }}</td>
                     <td>
                       <button class="btn btn-sm btn-outline-primary me-2" (click)="modificarActividad(actividad)">
@@ -274,7 +277,7 @@
 
         <!-- DIALOG -->
         @if (mostrarDialog) {
-        <app-dialog-actividad [actividad]="actividadSeleccionada" (guardar)="guardarCambios($event)"
+        <app-dialog-actividad [actividad]="actividadSeleccionada" [responsables]="usuarios" (guardar)="guardarCambios($event)"
           (cerrar)="cerrarDialog()">
         </app-dialog-actividad>
         }
@@ -324,7 +327,7 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">👨</span>
-                <h3 class="fw-bold mt-2">{{ usuarios.filter(u => u.rol === 'Padre').length }}</h3>
+                <h3 class="fw-bold mt-2">{{ totalPadres }}</h3>
                 <p class="text-muted mb-0">Padres</p>
               </div>
             </div>
@@ -334,7 +337,7 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">👩‍🏫</span>
-                <h3 class="fw-bold mt-2">{{ usuarios.filter(u => u.rol === 'Docente').length }}</h3>
+                <h3 class="fw-bold mt-2">{{ totalDocentes }}</h3>
                 <p class="text-muted mb-0">Docentes</p>
               </div>
             </div>
@@ -344,7 +347,7 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">✅</span>
-                <h3 class="fw-bold mt-2">{{ usuarios.filter(u => u.estado === 'Activo').length }}</h3>
+                <h3 class="fw-bold mt-2">{{ totalActivos }}</h3>
                 <p class="text-muted mb-0">Activos</p>
               </div>
             </div>
@@ -387,17 +390,17 @@
                 </thead>
 
                 <tbody>
-                  @for (usuario of usuariosFiltrados; track usuario.email) {
+                  @for (usuario of usuariosFiltrados; track usuario.usuarioId) {
                   <tr>
                     <td class="fw-semibold">{{ usuario.nombre }}</td>
                     <td>{{ usuario.email }}</td>
-                    <td class="text-dark">{{ usuario.rol }}</td>
+                    <td class="text-dark">{{ usuario.rolNombre }}</td>
                     <td>
                       <span class="badge" [ngClass]="getColorEstado(usuario.estado)">
-                        {{ usuario.estado }}
+                        {{ estadoTexto(usuario.estado) }}
                       </span>
                     </td>
-                    <td>{{ usuario.fecha }}</td>
+                    <td>{{ usuario.fechaRegistro | date:'yyyy-MM-dd' }}</td>
                     <td>
                       <button class="btn btn-sm btn-outline-primary me-2" (click)="modificarUsuario(usuario)">
                         Editar
@@ -419,7 +422,7 @@
 
         <!-- DIALOG USUARIOS -->
         @if (mostrarDialogUsuario) {
-        <app-dialog-usuario [usuario]="usuarioSeleccionado" [modo]="modoUsuario"
+        <app-dialog-usuario [usuario]="usuarioSeleccionado" [modo]="modoUsuario" [roles]="roles"
           (guardar)="guardarCambiosUsuario($event)" (cerrar)="cerrarDialogUsuario()">
         </app-dialog-usuario>
         }

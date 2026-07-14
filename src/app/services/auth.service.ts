@@ -1,43 +1,100 @@
-import { Injectable } from '@angular/core';
-import { signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, signal } from '@angular/core';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  usuarioId: number;
+  usuarioNombre: string;
+  rolNombre: string;
+  expiraEn: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly apiUrl = `${environment.apiUrl}/Auth`;
+  private readonly storageKey = 'sesionAprendeJugando';
 
-  public usuarioValido: string = 'admin';
-  public claveValida: string = '12345';
-
-  public usuarioLogueado: string = '';
+  public usuarioLogueado = '';
+  public rolActual = '';
+  public usuarioId: number | null = null;
   public estaLogueado = signal(false);
 
-  constructor() {
-    // Al iniciar el servicio, restaurar sesión desde localStorage
-    const usuarioGuardado = localStorage.getItem('usuarioLogueado');
-    if (usuarioGuardado) {
-      this.usuarioLogueado = usuarioGuardado;
-      this.estaLogueado.set(true);
-    }
+  constructor(private http: HttpClient) {
+    this.restaurarSesion();
   }
 
-  login(usuario: string, clave: string): boolean {
-    if (usuario === this.usuarioValido && clave === this.claveValida) {
-      this.usuarioLogueado = usuario;
-      this.estaLogueado.set(true);
-      localStorage.setItem('usuarioLogueado', usuario); // Persistir
-      return true;
-    }
+  get token(): string | null {
+    return this.sesion?.token ?? null;
+  }
 
-    this.usuarioLogueado = '';
-    this.estaLogueado.set(false);
-    localStorage.removeItem('usuarioLogueado');
-    return false;
+  login(email: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
+      tap(response => this.guardarSesion(response))
+    );
   }
 
   logout(): void {
     this.usuarioLogueado = '';
+    this.rolActual = '';
+    this.usuarioId = null;
     this.estaLogueado.set(false);
-    localStorage.removeItem('usuarioLogueado'); // Limpiar al salir
+    localStorage.removeItem(this.storageKey);
+  }
+
+  isAuthenticated(): boolean {
+    const sesion = this.sesion;
+    if (!sesion) {
+      return false;
+    }
+
+    if (new Date(sesion.expiraEn).getTime() <= Date.now()) {
+      this.logout();
+      return false;
+    }
+
+    return true;
+  }
+
+  private get sesion(): AuthResponse | null {
+    const raw = localStorage.getItem(this.storageKey);
+    if (!raw) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(raw) as AuthResponse;
+    } catch {
+      localStorage.removeItem(this.storageKey);
+      return null;
+    }
+  }
+
+  private guardarSesion(response: AuthResponse): void {
+    localStorage.setItem(this.storageKey, JSON.stringify(response));
+    this.usuarioLogueado = response.usuarioNombre;
+    this.rolActual = response.rolNombre;
+    this.usuarioId = response.usuarioId;
+    this.estaLogueado.set(true);
+  }
+
+  private restaurarSesion(): void {
+    const sesion = this.sesion;
+    if (!sesion) {
+      return;
+    }
+
+    this.usuarioLogueado = sesion.usuarioNombre;
+    this.rolActual = sesion.rolNombre;
+    this.usuarioId = sesion.usuarioId;
+    this.estaLogueado.set(this.isAuthenticated());
   }
 }

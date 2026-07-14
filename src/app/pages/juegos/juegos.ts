@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActividadService } from '../../services/actividad.service';
 
 interface Juego {
   id: string; titulo: string; descripcion: string;
   icono: string; color: string; nivel: string; jugadores: string;
+  actividadId: number;
 }
 interface CartaMemoria {
   id: number; emoji: string; volteada: boolean; emparejada: boolean;
@@ -21,16 +23,15 @@ interface ColorPregunta {
 })
 export class JuegosComponent implements OnInit, OnDestroy {
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private actividadService: ActividadService
+  ) {}
 
   juegoActivo: string | null = null;
-
-  juegos: Juego[] = [
-    { id: 'memoria', titulo: 'Memoria', descripcion: 'Encuentra las parejas de tarjetas y entrena tu memoria.', icono: '🧠', color: 'morado', nivel: 'Fácil', jugadores: '1-2 jugadores' },
-    { id: 'colores', titulo: 'Colores', descripcion: 'Aprende y reconoce los colores con ejercicios divertidos.', icono: '🎨', color: 'azul', nivel: 'Fácil', jugadores: '1 jugador' },
-    { id: 'rompecabezas', titulo: 'Rompecabezas', descripcion: 'Arma figuras y desarrolla tu pensamiento espacial.', icono: '🧩', color: 'verde', nivel: 'Medio', jugadores: '1-4 jugadores' },
-    { id: 'asociacion', titulo: 'Asociación', descripcion: 'Relaciona conceptos y refuerza tu aprendizaje.', icono: '🔗', color: 'naranja', nivel: 'Medio', jugadores: '1-2 jugadores' }
-  ];
+  juegos: Juego[] = [];
+  cargandoJuegos = false;
+  errorJuegos = '';
 
   filtroActivo: string = 'todos';
   get juegosFiltrados(): Juego[] {
@@ -47,7 +48,7 @@ export class JuegosComponent implements OnInit, OnDestroy {
   }
   cerrarJuego(): void { this.juegoActivo = null; this.limpiarTimer(); }
   trackById(_: number, j: Juego): string { return j.id; }
-  ngOnInit(): void {}
+  ngOnInit(): void { this.cargarJuegos(); }
   ngOnDestroy(): void { this.limpiarTimer(); }
 
   // MEMORIA
@@ -254,5 +255,54 @@ export class JuegosComponent implements OnInit, OnDestroy {
   }
   private limpiarTimer(): void {
     if (this.timerRef) { clearTimeout(this.timerRef); this.timerRef = null; }
+  }
+
+  private cargarJuegos(): void {
+    this.cargandoJuegos = true;
+    this.actividadService.obtenerActividades().subscribe({
+      next: actividades => {
+        this.juegos = actividades
+          .filter(actividad => actividad.estado === 'A' && actividad.tipo === 'Juego educativo')
+          .map(actividad => {
+            const id = this.normalizarJuegoId(actividad.nombre);
+            const meta = this.metaJuego(id);
+            return {
+              id,
+              titulo: actividad.nombre,
+              descripcion: meta.descripcion,
+              icono: meta.icono,
+              color: meta.color,
+              nivel: actividad.nivel === 'Inicial' ? 'Fácil' : 'Medio',
+              jugadores: meta.jugadores,
+              actividadId: actividad.actividadId
+            };
+          })
+          .filter(juego => ['memoria', 'colores', 'rompecabezas', 'asociacion'].includes(juego.id));
+        this.cargandoJuegos = false;
+      },
+      error: () => {
+        this.errorJuegos = 'No se pudieron cargar los juegos.';
+        this.cargandoJuegos = false;
+      }
+    });
+  }
+
+  private normalizarJuegoId(nombre: string): string {
+    const limpio = nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    if (limpio.includes('memoria')) return 'memoria';
+    if (limpio.includes('color')) return 'colores';
+    if (limpio.includes('rompecabezas')) return 'rompecabezas';
+    if (limpio.includes('asociacion')) return 'asociacion';
+    return limpio;
+  }
+
+  private metaJuego(id: string): Omit<Juego, 'id' | 'titulo' | 'nivel' | 'actividadId'> {
+    const meta: Record<string, Omit<Juego, 'id' | 'titulo' | 'nivel' | 'actividadId'>> = {
+      memoria: { descripcion: 'Encuentra las parejas de tarjetas y entrena tu memoria.', icono: '🧠', color: 'morado', jugadores: '1-2 jugadores' },
+      colores: { descripcion: 'Aprende y reconoce los colores con ejercicios divertidos.', icono: '🎨', color: 'azul', jugadores: '1 jugador' },
+      rompecabezas: { descripcion: 'Arma figuras y desarrolla tu pensamiento espacial.', icono: '🧩', color: 'verde', jugadores: '1-4 jugadores' },
+      asociacion: { descripcion: 'Relaciona conceptos y refuerza tu aprendizaje.', icono: '🔗', color: 'naranja', jugadores: '1-2 jugadores' }
+    };
+    return meta[id] ?? { descripcion: 'Actividad educativa interactiva.', icono: '🎮', color: 'azul', jugadores: '1 jugador' };
   }
 }

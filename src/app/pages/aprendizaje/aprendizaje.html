@@ -8,8 +8,10 @@
       <h1>Letras y Números</h1>
       <p>¡Aprende jugando!</p>
     </div>
-    <span class="nivel">Nivel 1</span>
+    <span class="nivel">{{ nivelActual }}</span>
   </header>
+
+  <p *ngIf="errorActividades" class="text-danger">{{ errorActividades }}</p>
 
   <nav class="tabs">
     <button class="tab" [class.on]="tabActiva === 'letras'"  (click)="cambiarTab('letras')">

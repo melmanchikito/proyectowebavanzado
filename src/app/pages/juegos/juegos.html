@@ -9,6 +9,8 @@
       <button class="filtro-btn" [class.activo]="filtroActivo === 'fácil'" (click)="setFiltro('fácil')">Fácil</button>
       <button class="filtro-btn" [class.activo]="filtroActivo === 'medio'" (click)="setFiltro('medio')">Medio</button>
     </div>
+    <p *ngIf="cargandoJuegos">Cargando juegos...</p>
+    <p *ngIf="errorJuegos" class="text-danger">{{ errorJuegos }}</p>
     <div class="cards">
       <div class="game" *ngFor="let juego of juegosFiltrados; trackBy: trackById" [class]="'game game--' + juego.color">
         <div class="game__icono">{{ juego.icono }}</div>
@@ -23,7 +25,7 @@
         <button class="game__btn" (click)="abrirJuego(juego.id)">Jugar ahora</button>
       </div>
     </div>
-    <div class="empty" *ngIf="juegosFiltrados.length === 0">
+    <div class="empty" *ngIf="!cargandoJuegos && juegosFiltrados.length === 0">
       <p>No hay juegos disponibles para este filtro.</p>
     </div>
   </ng-container>

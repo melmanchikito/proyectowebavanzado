@@ -11,10 +11,11 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
 
-  usuario: string = '';
+  usuario: string = 'admin@proyecto.local';
   clave: string = '';
   mensaje: string = '';
   tipoMensaje: string = '';
+  cargando = false;
 
   constructor(
     private authService: AuthService,
@@ -22,18 +23,28 @@ export class LoginComponent {
   ) {}
 
   ingresar(): void {
-    const acceso = this.authService.login(this.usuario, this.clave);
-
-    if (acceso) {
-      this.mensaje = 'Acceso concedido';
-      this.tipoMensaje = 'success';
-
-      setTimeout(() => {
-        this.router.navigate(['/home']);
-      }, 700);
-    } else {
-      this.mensaje = 'Error en credenciales';
+    if (!this.usuario || !this.clave || this.cargando) {
+      this.mensaje = 'Ingrese correo y clave';
       this.tipoMensaje = 'error';
+      return;
     }
+
+    this.cargando = true;
+    this.mensaje = '';
+
+    this.authService.login(this.usuario.trim(), this.clave).subscribe({
+      next: () => {
+        this.mensaje = 'Acceso concedido';
+        this.tipoMensaje = 'success';
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        this.mensaje = error.status === 0
+          ? 'No se pudo conectar con el backend'
+          : 'Correo o clave incorrectos';
+        this.tipoMensaje = 'error';
+        this.cargando = false;
+      }
+    });
   }
 }

@@ -11,6 +11,7 @@ export class DialogUsuarioComponent {
 
     @Input() usuario: any = null;
     @Input() modo: 'crear' | 'editar' = 'editar';
+    @Input() roles: any[] = [];
     @Output() guardar = new EventEmitter<any>();
     @Output() cerrar = new EventEmitter<void>();
 

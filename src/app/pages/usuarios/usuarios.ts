@@ -1,85 +1,63 @@
-import { Component } from '@angular/core';
-
-interface Usuario {
-  id: number;
-  nombre: string;
-  correo: string;
-  rol: 'padre' | 'docente';
-  estado: 'activo' | 'pendiente' | 'inactivo';
-  avatar: string;
-}
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Usuario, UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-usuarios',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css'
 })
-export class UsuariosComponent {
-  usuarios: Usuario[] = [
-    {
-      id: 1,
-      nombre: 'Carlos García',
-      correo: 'carlos.garcia@mail.com',
-      rol: 'padre',
-      estado: 'activo',
-      avatar: '👨'
-    },
-    {
-      id: 2,
-      nombre: 'María López',
-      correo: 'maria.lopez@mail.com',
-      rol: 'docente',
-      estado: 'activo',
-      avatar: '👩'
-    },
-    {
-      id: 3,
-      nombre: 'Juan Martínez',
-      correo: 'juan.martinez@mail.com',
-      rol: 'padre',
-      estado: 'activo',
-      avatar: '👨'
-    },
-    {
-      id: 4,
-      nombre: 'Ana Rodríguez',
-      correo: 'ana.rodriguez@mail.com',
-      rol: 'docente',
-      estado: 'pendiente',
-      avatar: '👩'
-    },
-    {
-      id: 5,
-      nombre: 'Pedro Sánchez',
-      correo: 'pedro.sanchez@mail.com',
-      rol: 'padre',
-      estado: 'activo',
-      avatar: '👨'
-    },
-    {
-      id: 6,
-      nombre: 'Laura Fernández',
-      correo: 'laura.fernandez@mail.com',
-      rol: 'docente',
-      estado: 'activo',
-      avatar: '👩'
-    },
-    {
-      id: 7,
-      nombre: 'Roberto González',
-      correo: 'roberto.gonzalez@mail.com',
-      rol: 'padre',
-      estado: 'inactivo',
-      avatar: '👨'
-    },
-    {
-      id: 8,
-      nombre: 'Sofía Torres',
-      correo: 'sofia.torres@mail.com',
-      rol: 'docente',
-      estado: 'activo',
-      avatar: '👩'
-    }
-  ];
+export class UsuariosComponent implements OnInit {
+  usuarios: Usuario[] = [];
+  cargando = false;
+  error = '';
+
+  constructor(private usuarioService: UsuarioService) {}
+
+  ngOnInit(): void {
+    this.cargarUsuarios();
+  }
+
+  cargarUsuarios(): void {
+    this.cargando = true;
+    this.error = '';
+
+    this.usuarioService.obtenerUsuarios().subscribe({
+      next: usuarios => {
+        this.usuarios = usuarios;
+        this.cargando = false;
+      },
+      error: () => {
+        this.error = 'No se pudieron cargar los usuarios.';
+        this.cargando = false;
+      }
+    });
+  }
+
+  get totalPadres(): number {
+    return this.usuarios.filter(usuario => usuario.rolNombre === 'Padre').length;
+  }
+
+  get totalDocentes(): number {
+    return this.usuarios.filter(usuario => usuario.rolNombre === 'Docente').length;
+  }
+
+  get totalPendientes(): number {
+    return this.usuarios.filter(usuario => usuario.estado === 'N').length;
+  }
+
+  estadoTexto(estado: string): string {
+    if (estado === 'A') return 'activo';
+    if (estado === 'I') return 'inactivo';
+    return 'pendiente';
+  }
+
+  rolTexto(rol: string): string {
+    return rol.toLowerCase();
+  }
+
+  avatar(rol: string): string {
+    return rol === 'Docente' ? '👩' : '👨';
+  }
 }

@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 export class DialogActividadComponent {
 
   @Input() actividad: any = null;
+  @Input() responsables: any[] = [];
   @Output() guardar = new EventEmitter<any>();
   @Output() cerrar = new EventEmitter<void>();
 

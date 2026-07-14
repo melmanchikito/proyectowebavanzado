@@ -10,15 +10,19 @@
   <nav class="nav">
     @if (authService.estaLogueado()) {
       <a routerLink="/home">Inicio</a>
-      <a routerLink="/usuarios">Usuarios</a>
+      @if (authService.rolActual === 'Admin') {
+        <a routerLink="/usuarios">Usuarios</a>
+      }
       <a routerLink="/aprendizaje">Aprendizaje</a>
       <a routerLink="/juegos">Juegos</a>
       <a routerLink="/progreso">Progreso</a>
-      <a routerLink="/admin">Admin</a>
+      @if (authService.rolActual === 'Admin') {
+        <a routerLink="/admin">Admin</a>
+      }
 
       <div class="profile">
         <span class="avatar">👤</span>
-        <span>{{ authService.usuarioLogueado }}</span>
+        <span>{{ authService.usuarioLogueado }} · {{ authService.rolActual }}</span>
       </div>
 
       <button (click)="cerrarSesion()">Cerrar sesión</button>
