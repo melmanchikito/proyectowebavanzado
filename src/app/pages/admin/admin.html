@@ -317,7 +317,7 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">👥</span>
-                <h3 class="fw-bold mt-2">{{ usuarios.length }}</h3>
+                <h3 class="fw-bold mt-2">{{ totalUsuarios }}</h3>
                 <p class="text-muted mb-0">Total Usuarios</p>
               </div>
             </div>
@@ -327,7 +327,11 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">👨</span>
+<<<<<<< HEAD
                 <h3 class="fw-bold mt-2">{{ totalPadres }}</h3>
+=======
+                <h3 class="fw-bold mt-2">{{ padresRegistrados }}</h3>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
                 <p class="text-muted mb-0">Padres</p>
               </div>
             </div>
@@ -337,7 +341,11 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">👩‍🏫</span>
+<<<<<<< HEAD
                 <h3 class="fw-bold mt-2">{{ totalDocentes }}</h3>
+=======
+                <h3 class="fw-bold mt-2">{{ docentesRegistrados }}</h3>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
                 <p class="text-muted mb-0">Docentes</p>
               </div>
             </div>
@@ -347,7 +355,11 @@
             <div class="card stat-card border-0 shadow-sm">
               <div class="card-body">
                 <span class="icon">✅</span>
+<<<<<<< HEAD
                 <h3 class="fw-bold mt-2">{{ totalActivos }}</h3>
+=======
+                <h3 class="fw-bold mt-2">{{ usuariosActivos }}</h3>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
                 <p class="text-muted mb-0">Activos</p>
               </div>
             </div>
@@ -369,6 +381,20 @@
               </button>
             </div>
 
+            @if (mensajeUsuario) {
+            <div class="mensaje-usuario" [class.success]="tipoMensajeUsuario === 'success'"
+              [class.error]="tipoMensajeUsuario === 'error'">
+              {{ mensajeUsuario }}
+            </div>
+            }
+
+            @if (mostrarToastUsuario) {
+            <div class="toast-usuario" [class.success]="tipoMensajeUsuario === 'success'"
+              [class.error]="tipoMensajeUsuario === 'error'">
+              {{ mensajeUsuario }}
+            </div>
+            }
+
             <!-- FILTRO -->
             <div class="mb-3">
               <input type="text" class="form-control" placeholder="Buscar usuario..." [(ngModel)]="filtroUsuarios">
@@ -384,12 +410,12 @@
                     <th>Email</th>
                     <th>Rol</th>
                     <th>Estado</th>
-                    <th>Fecha Registro</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
 
                 <tbody>
+<<<<<<< HEAD
                   @for (usuario of usuariosFiltrados; track usuario.usuarioId) {
                   <tr>
                     <td class="fw-semibold">{{ usuario.nombre }}</td>
@@ -401,16 +427,43 @@
                       </span>
                     </td>
                     <td>{{ usuario.fechaRegistro | date:'yyyy-MM-dd' }}</td>
+=======
+                  @if (cargandoUsuarios) {
+                  <tr>
+                    <td colspan="6">Cargando usuarios...</td>
+                  </tr>
+                  } @else {
+                  @for (usuario of usuariosFiltrados; track usuario.usuarioId) {
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <span class="avatar-mini">{{ getAvatar(usuario) }}</span>
+                        <strong>{{ usuario.nombre }}</strong>
+                      </div>
+                    </td>
+                    <td>{{ usuario.email }}</td>
+                    <td>
+                      <span class="badge" [class]="getRolClass(usuario.rolNombre)">
+                        {{ usuario.rolNombre }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="status" [class]="getEstadoClass(usuario.estado)">
+                        {{ getEstadoLabel(usuario.estado) }}
+                      </span>
+                    </td>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
                     <td>
                       <button class="btn btn-sm btn-outline-primary me-2" (click)="modificarUsuario(usuario)">
                         Editar
                       </button>
 
-                      <button class="btn btn-sm btn-outline-danger" (click)="eliminarUsuario(usuario)">
+                      <button class="btn btn-sm btn-outline-danger" (click)="solicitarEliminarUsuario(usuario)">
                         Eliminar
                       </button>
                     </td>
                   </tr>
+                  }
                   }
                 </tbody>
 
@@ -425,6 +478,21 @@
         <app-dialog-usuario [usuario]="usuarioSeleccionado" [modo]="modoUsuario" [roles]="roles"
           (guardar)="guardarCambiosUsuario($event)" (cerrar)="cerrarDialogUsuario()">
         </app-dialog-usuario>
+        }
+
+        @if (mostrarConfirmacionEliminar && usuarioAEliminar) {
+        <div class="confirm-backdrop">
+          <div class="confirm-box">
+            <h3>Eliminar usuario</h3>
+            <p>Estas seguro de quieres elliminar a este usuario?</p>
+            <p class="confirm-target">{{ usuarioAEliminar.nombre }}</p>
+
+            <div class="confirm-actions">
+              <button class="btn btn-outline-secondary" (click)="cancelarEliminarUsuario()">Cancelar</button>
+              <button class="btn btn-danger" (click)="confirmarEliminarUsuario()">Aceptar</button>
+            </div>
+          </div>
+        </div>
         }
 
         }

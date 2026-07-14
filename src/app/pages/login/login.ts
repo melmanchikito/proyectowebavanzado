@@ -11,8 +11,13 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
 
+<<<<<<< HEAD
   usuario: string = 'admin@proyecto.local';
   clave: string = '';
+=======
+  email: string = '';
+  password: string = '';
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
   mensaje: string = '';
   tipoMensaje: string = '';
   cargando = false;
@@ -20,11 +25,32 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
+<<<<<<< HEAD
   ingresar(): void {
     if (!this.usuario || !this.clave || this.cargando) {
       this.mensaje = 'Ingrese correo y clave';
+=======
+  async ingresar(): Promise<void> {
+    try {
+      const acceso = await this.authService.login(this.email, this.password);
+
+      if (!acceso) {
+        this.mensaje = 'No fue posible iniciar sesión';
+        this.tipoMensaje = 'error';
+        return;
+      }
+
+      this.mensaje = 'Acceso concedido';
+      this.tipoMensaje = 'success';
+
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 700);
+    } catch {
+      this.mensaje = 'Error en credenciales o conexión con la API';
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
       this.tipoMensaje = 'error';
       return;
     }

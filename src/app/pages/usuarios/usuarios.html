@@ -17,23 +17,40 @@
   <div class="stats">
     <div class="stat-card">
       <span>👨‍👩‍👧</span>
+<<<<<<< HEAD
       <h3>{{ usuarios.length }}</h3>
+=======
+      <h3>{{ totalUsuarios }}</h3>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
       <p>Usuarios totales</p>
     </div>
     <div class="stat-card">
       <span>👨‍👩</span>
+<<<<<<< HEAD
       <h3>{{ totalPadres }}</h3>
+=======
+      <h3>{{ padresRegistrados }}</h3>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
       <p>Padres registrados</p>
     </div>
     <div class="stat-card">
       <span>👨‍🏫</span>
+<<<<<<< HEAD
       <h3>{{ totalDocentes }}</h3>
+=======
+      <h3>{{ docentesRegistrados }}</h3>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
       <p>Docentes registrados</p>
     </div>
     <div class="stat-card">
       <span>⏳</span>
+<<<<<<< HEAD
       <h3>{{ totalPendientes }}</h3>
       <p>Registros pendientes</p>
+=======
+      <h3>{{ usuariosActivos }}</h3>
+      <p>Usuarios activos</p>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
     </div>
   </div>
 
@@ -62,16 +79,29 @@
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
+=======
+          @if (cargando) {
+          <tr>
+            <td colspan="4">Cargando usuarios...</td>
+          </tr>
+          } @else {
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
           @for (usuario of usuarios; track usuario.usuarioId) {
           <tr>
             <td>
               <div class="user-cell">
+<<<<<<< HEAD
                 <span class="avatar-mini">{{ avatar(usuario.rolNombre) }}</span>
+=======
+                <span class="avatar-mini">{{ getAvatar(usuario) }}</span>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
                 <strong>{{ usuario.nombre }}</strong>
               </div>
             </td>
             <td>{{ usuario.email }}</td>
             <td>
+<<<<<<< HEAD
               <span class="badge" [class]="'badge--' + rolTexto(usuario.rolNombre)">
                 {{ rolTexto(usuario.rolNombre) }}
               </span>
@@ -79,9 +109,19 @@
             <td>
               <span class="status" [class]="'status--' + estadoTexto(usuario.estado)">
                 {{ estadoTexto(usuario.estado) }}
+=======
+              <span class="badge" [class]="getRolClass(usuario.rolNombre)">
+                {{ usuario.rolNombre }}
+              </span>
+            </td>
+            <td>
+              <span class="status" [class]="getEstadoClass(usuario.estado)">
+                {{ getEstadoLabel(usuario.estado) }}
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
               </span>
             </td>
           </tr>
+          }
           }
         </tbody>
       </table>
@@ -92,4 +132,14 @@
     }
   </div>
 
+<<<<<<< HEAD
 </section>
+=======
+  @if (mensaje) {
+  <div class="mensaje" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
+    {{ mensaje }}
+  </div>
+  }
+
+</section>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25

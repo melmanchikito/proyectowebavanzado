@@ -1,14 +1,12 @@
 <div class="dialog-backdrop">
-
     <div class="dialog-box">
-
         <div class="dialog-header">
             <h2>{{ modo === 'crear' ? '➕ Nuevo Usuario' : '👤 Editar Usuario' }}</h2>
             <button class="close-btn" (click)="cerrarDialog()">✖</button>
         </div>
 
+        @if (usuario) {
         <div class="dialog-body">
-
             <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input id="nombre" [(ngModel)]="usuario.nombre" type="text">
@@ -19,7 +17,9 @@
                 <input id="email" [(ngModel)]="usuario.email" type="email">
             </div>
 
+            @if (tienePassword()) {
             <div class="form-group">
+<<<<<<< HEAD
                 <label for="rol">Rol</label>
                 <select id="rol" [(ngModel)]="usuario.rolId">
                     @for (rol of roles; track rol.rolId) {
@@ -42,13 +42,33 @@
                 <input id="password" [(ngModel)]="usuario.password" type="password" [placeholder]="modo === 'crear' ? 'Mínimo 5 caracteres' : 'Opcional'">
             </div>
 
+=======
+                <label for="password">Contraseña</label>
+                <input id="password" [(ngModel)]="usuario.password" type="password" autocomplete="new-password">
+            </div>
+            }
+
+            <div class="form-group">
+                <label for="rolId">Rol</label>
+                <select id="rolId" [(ngModel)]="usuario.rolId">
+                    <option [ngValue]="null" disabled>Seleccione un rol</option>
+                    @for (rol of roles; track rol.rolId) {
+                    <option [ngValue]="rol.rolId">{{ rol.nombre }}</option>
+                    }
+                </select>
+            </div>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
         </div>
 
         <div class="dialog-footer">
             <button class="btn-cancel" (click)="cerrarDialog()">Cancelar</button>
             <button class="btn-save" (click)="guardarCambios()">Guardar</button>
         </div>
-
+        }
     </div>
+<<<<<<< HEAD
 
 </div>
+=======
+</div>
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25

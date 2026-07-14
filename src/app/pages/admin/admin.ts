@@ -1,11 +1,20 @@
+<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
+=======
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DialogActividadComponent } from '../../components/dialog-actividad/dialog-actividad';
+<<<<<<< HEAD
 import { DialogUsuarioComponent } from '../../components/dialog-usuario/dialog-usuario';
 import { Actividad, ActividadCreate, ActividadService, ActividadUpdate } from '../../services/actividad.service';
 import { Rol, RoleService } from '../../services/role.service';
 import { Usuario, UsuarioCreate, UsuarioService, UsuarioUpdate } from '../../services/usuario.service';
+=======
+import { DialogUsuarioComponent, UsuarioFormulario } from '../../components/dialog-usuario/dialog-usuario';
+import { RolApi, UsuarioApi, UsuarioApiService, UsuarioCreatePayload, UsuarioPayload } from '../../services/usuario-api.service';
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
 
 @Component({
   selector: 'app-admin',
@@ -14,6 +23,7 @@ import { Usuario, UsuarioCreate, UsuarioService, UsuarioUpdate } from '../../ser
   styleUrl: './admin.css'
 })
 export class AdminComponent implements OnInit {
+<<<<<<< HEAD
   filtro = '';
   filtroUsuarios = '';
   mostrarDialog = false;
@@ -26,16 +36,93 @@ export class AdminComponent implements OnInit {
   cargando = false;
   mensaje = '';
   error = '';
+=======
+
+  // Actividades
+  filtro: string = '';
+  mostrarDialog: boolean = false;
+  actividadSeleccionada: any = null;
+  indiceSeleccionado: number = -1;
+  seccionActiva: string = 'actividades';
+
+  // Usuarios
+  filtroUsuarios: string = '';
+  mostrarDialogUsuario: boolean = false;
+  usuarioSeleccionado: UsuarioFormulario | null = null;
+  usuarioOriginalSeleccionado: UsuarioFormulario | null = null;
+  modoUsuario: 'crear' | 'editar' = 'crear';
+  usuarios: UsuarioApi[] = [];
+  roles: RolApi[] = [];
+  cargandoUsuarios: boolean = true;
+  cargandoRoles: boolean = true;
+  mensajeUsuario: string = '';
+  tipoMensajeUsuario: 'success' | 'error' | '' = '';
+  mostrarToastUsuario: boolean = false;
+  mostrarConfirmacionEliminar: boolean = false;
+  usuarioAEliminar: UsuarioApi | null = null;
+  private notificacionTimer: number | null = null;
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
 
   actividades: Actividad[] = [];
   usuarios: Usuario[] = [];
   roles: Rol[] = [];
 
+<<<<<<< HEAD
   constructor(
     private actividadService: ActividadService,
     private usuarioService: UsuarioService,
     private roleService: RoleService
   ) {}
+=======
+  constructor(private usuarioApiService: UsuarioApiService) { }
+
+  ngOnInit(): void {
+    void this.cargarUsuarios();
+    void this.cargarRoles();
+  }
+
+  get totalUsuarios(): number {
+    return this.usuarios.length;
+  }
+
+  get padresRegistrados(): number {
+    return this.usuarios.filter(usuario => this.normalizarRol(usuario.rolNombre) === 'padre').length;
+  }
+
+  get docentesRegistrados(): number {
+    return this.usuarios.filter(usuario => this.normalizarRol(usuario.rolNombre) === 'docente').length;
+  }
+
+  get usuariosActivos(): number {
+    return this.usuarios.filter(usuario => this.normalizarEstado(usuario.estado) === 'A').length;
+  }
+
+  async cargarUsuarios(): Promise<void> {
+    this.cargandoUsuarios = true;
+
+    try {
+      this.usuarios = await this.usuarioApiService.getUsuarios();
+    } catch {
+      this.usuarios = [];
+      this.mostrarMensajeUsuario('No se pudieron cargar los usuarios desde la API.', 'error');
+    } finally {
+      this.cargandoUsuarios = false;
+    }
+  }
+
+  async cargarRoles(): Promise<void> {
+    this.cargandoRoles = true;
+
+    try {
+      this.roles = await this.usuarioApiService.getRoles();
+    } catch {
+      this.roles = [];
+      this.mostrarMensajeUsuario('No se pudieron cargar los roles desde la API.', 'error');
+    } finally {
+      this.cargandoRoles = false;
+    }
+  }
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -89,8 +176,12 @@ export class AdminComponent implements OnInit {
       item.nombre.toLowerCase().includes(texto) ||
       item.email.toLowerCase().includes(texto) ||
       item.rolNombre.toLowerCase().includes(texto) ||
+<<<<<<< HEAD
       this.estadoTexto(item.estado).toLowerCase().includes(texto) ||
       item.fechaRegistro.includes(texto)
+=======
+      this.getEstadoLabel(item.estado).toLowerCase().includes(texto)
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
     );
   }
 
@@ -181,15 +272,23 @@ export class AdminComponent implements OnInit {
   crearNuevoUsuario(): void {
     this.modoUsuario = 'crear';
     this.usuarioSeleccionado = {
+      usuarioId: undefined,
       nombre: '',
       email: '',
+<<<<<<< HEAD
       password: '',
       rolId: this.roles[0]?.rolId,
       estado: 'A'
+=======
+      rolId: this.roles[0]?.rolId ?? null,
+      password: ''
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
     };
+    this.usuarioOriginalSeleccionado = null;
     this.mostrarDialogUsuario = true;
   }
 
+<<<<<<< HEAD
   modificarUsuario(usuario: Usuario): void {
     this.modoUsuario = 'editar';
     this.usuarioSeleccionado = {
@@ -253,6 +352,80 @@ export class AdminComponent implements OnInit {
       next: () => this.cargarUsuarios(),
       error: error => this.error = this.mensajeError(error, 'No se pudo eliminar el usuario.')
     });
+=======
+  modificarUsuario(usuario: UsuarioApi) {
+    this.modoUsuario = 'editar';
+    this.usuarioSeleccionado = {
+      usuarioId: usuario.usuarioId,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      rolId: usuario.rolId
+    };
+    this.usuarioOriginalSeleccionado = { ...this.usuarioSeleccionado };
+    this.mostrarDialogUsuario = true;
+  }
+
+  async guardarCambiosUsuario(usuarioEditado: UsuarioFormulario) {
+    try {
+      if (this.modoUsuario === 'crear') {
+        await this.usuarioApiService.createUsuario(this.crearPayloadUsuario(usuarioEditado));
+        this.cerrarModalYNotificar('Usuario creado correctamente.', 'success');
+      } else {
+        if (!this.usuarioOriginalSeleccionado?.usuarioId || !usuarioEditado.usuarioId) {
+          this.mostrarMensajeUsuario('No se pudo identificar el usuario a actualizar.', 'error');
+          return;
+        }
+
+        const patch = this.crearPatchUsuario(this.usuarioOriginalSeleccionado, usuarioEditado);
+
+        if (Object.keys(patch).length === 0) {
+          this.mostrarMensajeUsuario('No hay cambios para guardar.', 'error');
+          return;
+        }
+
+        await this.usuarioApiService.updateUsuario(usuarioEditado.usuarioId, patch);
+        this.cerrarModalYNotificar('Usuario actualizado correctamente.', 'success');
+      }
+
+      await this.cargarUsuarios();
+    } catch (error) {
+      this.mostrarMensajeUsuario(this.obtenerMensajeError(error, 'No fue posible guardar el usuario.'), 'error');
+    }
+  }
+
+  cerrarDialogUsuario() {
+    this.mostrarDialogUsuario = false;
+    this.usuarioSeleccionado = null;
+    this.usuarioOriginalSeleccionado = null;
+  }
+
+  solicitarEliminarUsuario(usuario: UsuarioApi) {
+    this.usuarioAEliminar = usuario;
+    this.mostrarConfirmacionEliminar = true;
+  }
+
+  cancelarEliminarUsuario() {
+    this.mostrarConfirmacionEliminar = false;
+    this.usuarioAEliminar = null;
+  }
+
+  async confirmarEliminarUsuario() {
+    if (!this.usuarioAEliminar) {
+      return;
+    }
+
+    const usuario = this.usuarioAEliminar;
+    this.mostrarConfirmacionEliminar = false;
+    this.usuarioAEliminar = null;
+
+    try {
+      await this.usuarioApiService.deleteUsuario(usuario.usuarioId);
+      this.mostrarMensajeUsuario('Usuario eliminado correctamente.', 'success');
+      await this.cargarUsuarios();
+    } catch (error) {
+      this.mostrarMensajeUsuario(this.obtenerMensajeError(error, 'No fue posible eliminar el usuario.'), 'error');
+    }
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
   }
 
   getColorRol(rol: string): string {
@@ -264,6 +437,7 @@ export class AdminComponent implements OnInit {
     }
   }
 
+<<<<<<< HEAD
   getColorEstado(estado: string): string {
     switch (estado) {
       case 'A': return 'bg-success';
@@ -283,3 +457,150 @@ export class AdminComponent implements OnInit {
     return error?.error?.title ?? error?.error?.mensaje ?? fallback;
   }
 }
+=======
+  getEstadoLabel(estado: string): string {
+    switch (this.normalizarEstado(estado)) {
+      case 'A':
+        return 'Activo';
+      case 'I':
+        return 'Inactivo';
+      case 'N':
+        return 'No disponible';
+      default:
+        return 'No disponible';
+    }
+  }
+
+  getEstadoClass(estado: string): string {
+    switch (this.normalizarEstado(estado)) {
+      case 'A':
+        return 'status status--activo';
+      case 'I':
+        return 'status status--inactivo';
+      case 'N':
+        return 'status status--no-disponible';
+      default:
+        return 'status status--no-disponible';
+    }
+  }
+
+  getRolClass(rolNombre: string): string {
+    switch (this.normalizarRol(rolNombre)) {
+      case 'padre':
+        return 'badge badge--padre';
+      case 'docente':
+        return 'badge badge--docente';
+      case 'admin':
+        return 'badge badge--admin';
+      default:
+        return 'badge badge--generic';
+    }
+  }
+
+  getAvatar(usuario: UsuarioApi): string {
+    const rol = this.normalizarRol(usuario.rolNombre);
+
+    if (rol === 'padre') {
+      return '👨';
+    }
+
+    if (rol === 'docente') {
+      return '👩‍🏫';
+    }
+
+    if (rol === 'admin') {
+      return '🛡️';
+    }
+
+    return usuario.nombre?.charAt(0).toUpperCase() || '👤';
+  }
+
+  private crearPayloadUsuario(usuario: UsuarioFormulario): UsuarioCreatePayload {
+    return {
+      nombre: usuario.nombre.trim(),
+      email: usuario.email.trim(),
+      rolId: Number(usuario.rolId),
+      password: usuario.password?.trim() ?? ''
+    };
+  }
+
+  private crearPatchUsuario(original: UsuarioFormulario, actual: UsuarioFormulario): Partial<UsuarioPayload> {
+    const patch: Partial<UsuarioPayload> = {};
+
+    if (original.nombre !== actual.nombre) {
+      patch.nombre = actual.nombre.trim();
+    }
+
+    if (original.email !== actual.email) {
+      patch.email = actual.email.trim();
+    }
+
+    if (original.rolId !== actual.rolId && actual.rolId !== null) {
+      patch.rolId = Number(actual.rolId);
+    }
+
+    return patch;
+  }
+
+  private mostrarMensajeUsuario(mensaje: string, tipoMensaje: 'success' | 'error'): void {
+    if (this.notificacionTimer !== null) {
+      window.clearTimeout(this.notificacionTimer);
+    }
+
+    this.mensajeUsuario = mensaje;
+    this.tipoMensajeUsuario = tipoMensaje;
+    this.mostrarToastUsuario = true;
+
+    this.notificacionTimer = window.setTimeout(() => {
+      this.mostrarToastUsuario = false;
+      this.mensajeUsuario = '';
+      this.tipoMensajeUsuario = '';
+      this.notificacionTimer = null;
+    }, 2400);
+  }
+
+  private cerrarModalYNotificar(mensaje: string, tipoMensaje: 'success' | 'error'): void {
+    this.mostrarDialogUsuario = false;
+    this.usuarioSeleccionado = null;
+    this.usuarioOriginalSeleccionado = null;
+    this.mostrarMensajeUsuario(mensaje, tipoMensaje);
+  }
+
+  private obtenerMensajeError(error: unknown, mensajePorDefecto: string): string {
+    if (this.usuarioApiService.isHttpError(error)) {
+      switch (error.status) {
+        case 0:
+          return 'No se pudo conectar con la API de usuarios.';
+        case 400:
+          return error.error?.message ?? 'La solicitud es inválida.';
+        case 401:
+          return 'No tienes permisos para ejecutar esta acción.';
+        case 404:
+          return 'El usuario solicitado no existe.';
+        case 409:
+          return error.error?.message ?? 'Ya existe un registro con esos datos.';
+        case 500:
+          return 'La API devolvió un error interno.';
+        default:
+          return error.error?.message ?? mensajePorDefecto;
+      }
+    }
+
+    return mensajePorDefecto;
+  }
+
+  private normalizarRol(rolNombre: string): string {
+    return (rolNombre ?? '').trim().toLowerCase();
+  }
+
+  private normalizarEstado(estado: string): 'A' | 'I' | 'N' {
+    const valor = (estado ?? '').trim().toUpperCase();
+
+    if (valor === 'A' || valor === 'I' || valor === 'N') {
+      return valor;
+    }
+
+    return 'N';
+  }
+}
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25

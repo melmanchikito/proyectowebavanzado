@@ -12,6 +12,7 @@
     <form (ngSubmit)="ingresar()">
       <div class="form-group">
         <label>Correo</label>
+<<<<<<< HEAD
         <input
           type="email"
           name="usuario"
@@ -19,10 +20,14 @@
           placeholder="admin@proyecto.local"
           required
         />
+=======
+        <input type="email" name="email" [(ngModel)]="email" placeholder="Ingrese su correo" required />
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
       </div>
 
       <div class="form-group">
         <label>Contraseña</label>
+<<<<<<< HEAD
         <input
           type="password"
           name="clave"
@@ -30,12 +35,16 @@
           placeholder="Ingrese su contraseña"
           required
         />
+=======
+        <input type="password" name="password" [(ngModel)]="password" placeholder="Ingrese su contraseña" required />
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
       </div>
 
       <button type="submit" [disabled]="cargando">{{ cargando ? 'Ingresando...' : 'Ingresar' }}</button>
     </form>
 
     @if (mensaje) {
+<<<<<<< HEAD
       <div class="mensaje" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
         {{ mensaje }}
       </div>
@@ -44,6 +53,11 @@
     <div class="credenciales">
       <strong>Correo:</strong> admin@proyecto.local |
       <strong>Clave:</strong> 12345
+=======
+    <div class="mensaje" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
+      {{ mensaje }}
+>>>>>>> e5c6b9959dae109045cd674672f73784a15d0b25
     </div>
+    }
   </div>
 </section>
