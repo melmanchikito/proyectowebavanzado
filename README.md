@@ -1,59 +1,131 @@
-# AprendizajeInicialApp
+# Plataforma de Aprendizaje — Proyecto Web Avanzado
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+## Descripción
 
-## Development server
+Aplicación web desarrollada con Angular para una plataforma de aprendizaje. El proyecto está estructurado mediante rutas, páginas, componentes, servicios y una capa `core`, y contempla áreas para usuarios y administración.
 
-To start a local development server, run:
+Entre sus módulos se encuentran inicio, autenticación, aprendizaje, juegos, seguimiento de progreso, gestión de usuarios y administración.
 
-```bash
-ng serve
+## Tecnologías utilizadas
+
+- Angular 21
+- TypeScript
+- Bootstrap 5
+- RxJS
+- npm
+- Vitest
+- Prettier
+
+## Módulos y páginas
+
+```text
+src/app/pages/
+├── admin/
+├── aprendizaje/
+├── home/
+├── juegos/
+├── login/
+├── progreso/
+└── usuarios/
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+El proyecto también contiene:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```text
+src/app/
+├── components/
+├── core/
+├── pages/
+├── services/
+├── app.config.ts
+└── app.routes.ts
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Requisitos
+
+- Node.js compatible con Angular 21.
+- npm 10 o versión compatible.
+
+## Instalación
 
 ```bash
-ng generate --help
+git clone https://github.com/melmanchikito/proyectowebavanzado.git
+cd proyectowebavanzado
+npm install
 ```
 
-## Building
-
-To build the project run:
+## Servidor de desarrollo
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+o:
 
 ```bash
-ng test
+ng serve --port 4200
 ```
 
-## Running end-to-end tests
+Luego abre:
 
-For end-to-end (e2e) testing, run:
+```text
+http://localhost:4200
+```
+
+## Compilar
 
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Pruebas
 
-## Additional Resources
+```bash
+npm test
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Formato del código
+
+El proyecto incluye configuración de Prettier para mantener un formato consistente.
+
+## Variables de entorno y seguridad
+
+No publiques credenciales ni secretos en Git.
+
+Si la aplicación requiere configuración local:
+
+1. Agrega `.env` a `.gitignore`.
+2. Crea un archivo `.env.example` únicamente con nombres de variables y valores de ejemplo.
+3. Si alguna credencial real ya fue publicada, elimínala del repositorio y rótala.
+
+Ejemplo:
+
+```text
+API_URL=http://localhost:3000
+```
+
+## Ejemplo de uso
+
+La aplicación permite navegar por distintas áreas relacionadas con el aprendizaje y dispone de rutas diferenciadas para funcionalidades como juegos, progreso, usuarios y administración.
+
+## Capturas de pantalla
+
+Crea una carpeta `docs/screenshots/` y agrega, por ejemplo:
+
+```md
+![Inicio](docs/screenshots/home.png)
+![Aprendizaje](docs/screenshots/aprendizaje.png)
+![Panel administrativo](docs/screenshots/admin.png)
+```
+
+## Contribuciones
+
+1. Crea una rama para cada cambio.
+2. Mantén la separación entre páginas, componentes y servicios.
+3. Ejecuta pruebas antes de enviar cambios.
+4. No publiques archivos de entorno con credenciales.
+5. Abre un pull request con una descripción clara.
+
+## Autor
+
+Germán Machado — [GitHub](https://github.com/melmanchikito)
